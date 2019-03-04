@@ -70,6 +70,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'TaskManager.wsgi.application'
 
+STATIC_URL = '/static/'
+PROJECT_PATH = os.path.abspath((os.path.dirname(__name__)))
+STATICFILES_DIRS = [
+    os.path.join(PROJECT_PATH, 'static')
+]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
