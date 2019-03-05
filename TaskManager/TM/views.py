@@ -74,15 +74,14 @@ class CreateTeamView(LoginRequiredMixin, TemplateView):
             form = CreateTeamForm(request.POST)
             if form.is_valid():
                 name = form.cleaned_data["name"]
-                tea = Teams()
-                tea.name=name
+                tea = Teams.objects.create(name=name)
                 m = Membership(member=user, team=tea)
-                tea.save()
                 m.save()
                 for key, value in request.POST.items():
                     if("member" in key):
                         mem = User.objects.get(username=value)
                         m = Membership(member=mem, team=tea)
                         m.save()
+                print(tea.members.all())
                 return redirect("/teams/")
         return

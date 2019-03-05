@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class Teams(models.Model):    
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=400)
-    members = models.ManyToManyField(User)
+    members = models.ManyToManyField(User, through='Membership', related_name="member")
 
 class Task(models.Model):
     id = models.AutoField(primary_key=True)
