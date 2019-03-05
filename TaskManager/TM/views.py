@@ -75,9 +75,10 @@ class CreateTeamView(LoginRequiredMixin, TemplateView):
         form = CreateTeamForm()
         user = request.user
         us = UserProfile.objects.get(user=user)
-        return render(request, self.template_name, {'form': form, 'us': us, 'user': user})
+        return render(request, self.template_name, {'form': form, 'us': us, 'user': user, 'error': False})
     def post(self, request):
         user = request.user
+        us = UserProfile.objects.get(user=user)
         if request.method == "POST":
             form = CreateTeamForm(request.POST)
             if form.is_valid():
@@ -87,10 +88,15 @@ class CreateTeamView(LoginRequiredMixin, TemplateView):
                 m.save()
                 for key, value in request.POST.items():
                     if("member" in key):
-                        mem = User.objects.get(username=value)
-                        m = Membership(member=mem, team=tea)
-                        m.save()
-                print(tea.members.all())
+                        try:
+                            mem = User.objects.get(username=value)
+                            if mem is not None:
+                                m = Membership(member=mem, team=tea)
+                                m.save()
+                        except User.DoesNotExist:
+                            Teams.objects.filter(id=tea.id).delete()
+                            return render(request, self.template_name, {'form': form, 'us': us, 'user': user, 'error': True, 'error_msg': "User Does not exist: " + str(value)})
+                            
                 return redirect("/teams/")
 
 

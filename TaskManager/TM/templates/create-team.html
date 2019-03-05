@@ -102,6 +102,17 @@
             <div class="col-xl-2"></div>
             <!-- Area Chart -->
             <div class="col-xl-8">
+                {% if error %}
+                <div class="alert alert-danger" role="alert">
+                  {%  if error_msg != ""  %}
+                  {{  error_msg }}
+                  {%  else  %}
+                    Entered information is invalid!
+                  {%  endif %}
+                  </div>
+                  
+                  {% endif %}
+                  
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
