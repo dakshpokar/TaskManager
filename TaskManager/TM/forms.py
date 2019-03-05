@@ -13,5 +13,4 @@ class UserForm(forms.Form):
 
 
 class CreateTeamForm(forms.Form):
-    name = forms.CharField(label="", widget=forms.TextInput(attrs={'id':'cgpa', 'class':'form-control form-control-user', 'placeholder':'Team Name'}), required=False)
-    members = forms.IntegerField(label="", widget=forms.TextInput(attrs={'id':'internships', 'class':'form-control form-control-user', 'placeholder':'Enter number of Internships'}), required=False)
+    name = forms.CharField(label="", widget=forms.TextInput(attrs={'id':'cgpa', 'class':'form-control form-control-user', 'placeholder':'Team Name'}))

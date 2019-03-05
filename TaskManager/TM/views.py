@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
+from .models import Membership, Teams
 
 def logout_view(request):
     logout(request)
@@ -73,7 +74,15 @@ class CreateTeamView(LoginRequiredMixin, TemplateView):
             form = CreateTeamForm(request.POST)
             if form.is_valid():
                 name = form.cleaned_data["name"]
+                tea = Teams()
+                tea.name=name
+                m = Membership(member=user, team=tea)
+                tea.save()
+                m.save()
                 for key, value in request.POST.items():
                     if("member" in key):
-                        print(key, value)
+                        mem = User.objects.get(username=value)
+                        m = Membership(member=mem, team=tea)
+                        m.save()
+                return redirect("/teams/")
         return

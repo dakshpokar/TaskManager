@@ -10,3 +10,6 @@ class Teams(models.Model):
 class Task(models.Model):
     id = models.AutoField(primary_key=True)
 
+class Membership(models.Model):
+    member = models.ForeignKey(User, on_delete=models.CASCADE)
+    team = models.ForeignKey(Teams, on_delete=models.CASCADE)
