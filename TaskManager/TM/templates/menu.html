@@ -1,0 +1,81 @@
+{% load static %}
+<!-- Sidebar -->
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+        <!-- Sidebar - Brand -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/dashboard/">
+            <div class="sidebar-brand-icon">
+                <h5>IIT Bombay</h5>
+              </div>
+          <div class="sidebar-brand-text mx-3">
+            <!--<img src="{% static 'img/big_logo.png' %}" height="42px" style="margin-left:-15px"/>-->
+          </div>
+        </a>
+  
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+  
+        <!-- Nav Item - Dashboard -->
+        
+        <li class="nav-item {%  if request.path == "/" %} active {%  endif %}">
+          <a class="nav-link" href="/">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Dashboard</span></a>
+        </li>
+  
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+  
+            <!-- Heading -->
+            <div class="sidebar-heading">
+              Team Management
+            </div>
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item {%  if request.path == "/create-team/" %}active{%  endif %}">
+                <a class="nav-link" href="/create-team/">
+                  <i class="fas fa-fw fa-plus"></i>
+                  <span>Create Team</span></a>
+              </li>
+              <li class="nav-item {%  if request.path == "/teams/" %} active {%  endif %}">
+                  <a class="nav-link" href="/teams/">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>Teams</span></a>
+                </li>
+        
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+      
+        
+  
+        <!-- Heading -->
+        <div class="sidebar-heading">
+          Account
+        </div>
+  
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link" href="/{%  if us.status == 1   %}teacher{%  else    %}student{%  endif   %}/{{  us.username  }}">
+              <i class="fas fa-fw fa-user-circle"></i>
+              <span>Profile</span></a>
+              
+          </li>  
+             <li class="nav-item {%  if request.path == "/settings/" %} active {%  endif %}">
+             
+                <a class="nav-link" href="/settings/">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Settings</span></a>
+                  
+              </li>
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+  
+    
+    
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+          <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+  
+      </ul>
+      <!-- End of Sidebar -->
+  

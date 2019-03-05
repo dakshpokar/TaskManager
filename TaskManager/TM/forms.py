@@ -10,3 +10,8 @@ class UserForm(forms.Form):
     last_name = forms.CharField(label="Last Name", widget=forms.TextInput(attrs={'class':'form-control form-control-user', 'placeholder':'Last Name'}))
     email = forms.CharField(label="Email", widget=forms.TextInput(attrs={'class':'form-control form-control-user', 'placeholder':'Email'}))
     password = forms.CharField(label="Password", widget=forms.PasswordInput(attrs={'id':'Password', 'class':'form-control form-control-user', 'placeholder':'Password'}))
+
+
+class CreateTeamForm(forms.Form):
+    name = forms.CharField(label="", widget=forms.TextInput(attrs={'id':'cgpa', 'class':'form-control form-control-user', 'placeholder':'Team Name'}), required=False)
+    members = forms.IntegerField(label="", widget=forms.TextInput(attrs={'id':'internships', 'class':'form-control form-control-user', 'placeholder':'Enter number of Internships'}), required=False)
