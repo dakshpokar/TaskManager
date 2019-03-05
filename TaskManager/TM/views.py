@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
-from .models import Membership, Teams
+from .models import Membership, Teams, UserProfile
 
 def logout_view(request):
     logout(request)
@@ -48,6 +48,10 @@ class RegisterView(TemplateView):
                 user.first_name = first_name
                 user.last_name = last_name
                 user.save()
+                us = UserProfile()
+                us.user=user
+                us.username = first_name.lower() + last_name.lower() + str(user.id)
+                us.save()
                 return redirect('../login')
             else:
                 return redirect('../')
@@ -57,7 +61,9 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     login_url = '../login/'
     template_name = "dashboard.html"
     def get(self, request):
-        return render(request, self.template_name)
+        user = request.user
+        us = UserProfile.objects.get(user=user)
+        return render(request, self.template_name, {'us': us, 'user': user})
     def post(self, request):
         return
 
@@ -67,14 +73,16 @@ class CreateTeamView(LoginRequiredMixin, TemplateView):
     template_name = "create-team.html"
     def get(self, request):
         form = CreateTeamForm()
-        return render(request, self.template_name, {'form': form})
+        user = request.user
+        us = UserProfile.objects.get(user=user)
+        return render(request, self.template_name, {'form': form, 'us': us, 'user': user})
     def post(self, request):
         user = request.user
         if request.method == "POST":
             form = CreateTeamForm(request.POST)
             if form.is_valid():
                 name = form.cleaned_data["name"]
-                tea = Teams.objects.create(name=name)
+                tea = Teams.objects.create(name=name, admin=user)
                 m = Membership(member=user, team=tea)
                 m.save()
                 for key, value in request.POST.items():
@@ -84,4 +92,15 @@ class CreateTeamView(LoginRequiredMixin, TemplateView):
                         m.save()
                 print(tea.members.all())
                 return redirect("/teams/")
+
+
+class TeamView(LoginRequiredMixin, TemplateView):
+    login_url = '../login/'
+    template_name="teams.html"
+    def get(self, request):
+        user = request.user
+        us = UserProfile.objects.get(user=user)
+        teams = Teams.objects.filter(admin=user)
+        return render(request, self.template_name, {'teams': teams, 'us': us, 'user': user})
+    def post(self, request):
         return

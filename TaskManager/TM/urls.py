@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.urls import path
-from TM.views import LoginView, RegisterView, DashboardView, CreateTeamView, logout_view
+from TM.views import LoginView, RegisterView, DashboardView, CreateTeamView, logout_view, TeamView
 
 urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
@@ -8,4 +8,6 @@ urlpatterns = [
     path('', DashboardView.as_view(), name="dashboard"),
     path('create-team/', CreateTeamView.as_view(), name="create-team"),
     path('logout/', logout_view, name="logout"),
+    path('teams/', TeamView.as_view(), name="team"),
+    
 ]
