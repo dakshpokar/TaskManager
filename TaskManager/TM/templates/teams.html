@@ -73,20 +73,26 @@
                                         <thead>
                                                 <tr>
                                                   <th>Name</th>
+                                                  <th>URL</th>
                                                   <th>Members</th>
+                                                  <th>Open</th>
                                                 </tr>
                                               </thead>
                                               <tfoot>
                                                     <tr>
                                                       <th>Name</th>
+                                                      <th>URL</th>
                                                       <th>Members</th>
+                                                      <th>Open</th>
                                                     </tr>
                                                 </tfoot>
                                                 <tbody>
                                                         {%    for i in teams.all  %}
                                                     <tr>
                                                         <td>{{  i.name   }}</td>
+                                                        <td>{{  i.url   }}</td>
                                                         <td>{{  i.members.count }}</td>
+                                                        <td><a href="/team/{{ i.url }}/"><i class="fas fa-external-link-alt"></i></a></td>
                                                     </tr>
                                                     {%  endfor  %}
                                                 </tbody>

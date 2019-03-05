@@ -84,6 +84,8 @@ class CreateTeamView(LoginRequiredMixin, TemplateView):
             if form.is_valid():
                 name = form.cleaned_data["name"]
                 tea = Teams.objects.create(name=name, admin=user)
+                tea.url = tea.name.lower() + str(tea.id)
+                tea.save()
                 m = Membership(member=user, team=tea)
                 m.save()
                 for key, value in request.POST.items():
@@ -108,5 +110,17 @@ class TeamView(LoginRequiredMixin, TemplateView):
         us = UserProfile.objects.get(user=user)
         teams = Teams.objects.filter(admin=user)
         return render(request, self.template_name, {'teams': teams, 'us': us, 'user': user})
+    def post(self, request):
+        return
+
+class SpecificTeamView(TemplateView):
+    def get(self, request):
+        return
+    def post(self, request):
+        return
+
+class ProfileView(TemplateView):
+    def get(self, request):
+        return
     def post(self, request):
         return
