@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from .forms import LoginForm, UserForm, CreateTeamForm
+from TM.forms import *
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -165,7 +165,8 @@ class CreateTaskView(LoginRequiredMixin, TemplateView):
         user = request.user
         us = UserProfile.objects.get(user=user)
         team = Teams.objects.get(url=request.path.split("/")[2])
-        return render(request, self.template_name, {'user': user, 'us': us, 'team': team})
+        form = CreateTaskForm()
+        return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'form':  form})
     def post(self, request):
         return
 

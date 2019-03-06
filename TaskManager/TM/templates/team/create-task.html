@@ -40,29 +40,11 @@
         var x = document.getElementById("mem-"+i.toString())
         x.remove()
     }
-    function createProjects(){
-      var adam = document.getElementById("adam")
-      var input = document.createElement("input")
-      var div = document.createElement("div")
-      var del = document.createElement("a")
-      div.setAttribute("id", "mem-"+deg.toString())
-      div.setAttribute("class", "input-group")
-      del.setAttribute("onclick", "del("+deg.toString()+")")
-      del.setAttribute("class", "btn btn-danger btn-circle")
-      del.setAttribute("style", "height: 3.2rem; width: 3.2rem")
-      var i = document.createElement("i")
-      i.setAttribute("class", "fa fa-minus")
-      i.setAttribute("style", "color: #fff")
-      del.appendChild(i)
-      input.setAttribute("type", "text")
-      input.setAttribute("name", "member-"+deg.toString())
-      deg = deg + 1
-      input.setAttribute("class", "form-control form-control-user")
-      input.setAttribute("placeholder", "Member Username")
-      input.setAttribute("style", "margin-bottom: 10px; margin-right: 5px; border-radius: 10rem;")
-      div.appendChild(input)
-      div.appendChild(del)
-      adam.appendChild(div)
+    function displayer(){
+      var dis = document.getElementById("dis")
+      var input = document.getElementById("desc")
+      var html_input = input.value
+      dis.innerHTML = html_input
     }
     </script>
 <body id="page-top">
@@ -116,33 +98,47 @@
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Enter the name of Team </h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Enter the name of Task </h6>
                   
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                    {{  form.name }}
+                    {{  form.title }}
                 </div>
               </div>
               <div class="card shadow mb-4">
+                  <!-- Card Header - Dropdown -->
+                  <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Enter description for the task </h6>
+                    
+                  </div>
+                  <!-- Card Body -->
+                  <div class="card-body">
+                      <div class="row">
+                        <div class="col-6">
+                            <h5>Description: </h5>
+                          {{  form.desc }}
+                      </div>
+                      <div class="col-6">
+                        <h5>Preview: </h5>
+                      <div id="dis" style="border: 1px solid #d1d3e2; width: 100%">
+
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Add Users to Team </h6>
-                  
+                  <h6 class="m-0 font-weight-bold text-primary">Assign Members to Task </h6>
                 </div>
                 <!-- Card Body -->
-                <div class="card-body"><div id="adam" style="width: 100%; margin-bottom: 10px">
-                    </div>
-                        <div class="row" style="margin-top: 10px">
-                                <div class="col-5"></div>
-                                <div class="col-2" align="center">
-                                    
-                                        <a onclick="createProjects()" style="color: #fff" class="btn btn-primary btn-circle">
-                                                <i class="fa fa-plus"></i>
-                                              </a>
-                                </div>
-                                <div class="col-5"></div>
-                              </div>
+                <div class="card-body">
+                    {%  for i in team.members.all %}
+                    <input type="checkbox" name="option{{ i.id }}" value="{{  i.id  }}" required> <label for="{{ i.first_name  }}{{  i.last_name }}">{{ i.first_name }} {{ i.last_name }}</label> 
+                    <br>
+                    {%  endfor %}
                         </div>
                         
               </div>

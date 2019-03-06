@@ -13,4 +13,8 @@ class UserForm(forms.Form):
 
 
 class CreateTeamForm(forms.Form):
-    name = forms.CharField(label="", widget=forms.TextInput(attrs={'id':'cgpa', 'class':'form-control form-control-user', 'placeholder':'Team Name'}))
+    name = forms.CharField(label="", widget=forms.TextInput(attrs={'id':'name', 'class':'form-control form-control-user', 'placeholder':'Team Name'}))
+
+class CreateTaskForm(forms.Form):
+    title = forms.CharField(label="", widget=forms.TextInput(attrs={'id':'title', 'class':'form-control form-control-user', 'placeholder':'Task Title'}))
+    desc = forms.CharField(label="", widget=forms.Textarea(attrs={'id':'desc','placeholder':'Task Description (Can be in HTML)', 'onkeyup':'displayer()'}))
