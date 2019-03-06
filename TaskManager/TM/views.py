@@ -148,6 +148,15 @@ class ProfileView(TemplateView):
     def post(self, request):
         return
 
+class SettingsView(LoginRequiredMixin, TemplateView):
+    template_name="settings.html"
+    def get(self, request):
+        user = request.user
+        us = UserProfile.objects.get(user=user)
+        return render(request, self.template_name, {'user': user, 'us': us})
+    def post(self, request):
+        return    
+
 
 class CreateTaskView(LoginRequiredMixin, TemplateView):
     template_name="team/create-task.html"

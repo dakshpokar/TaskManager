@@ -20,6 +20,17 @@ class Teams(models.Model):
 
 class Task(models.Model):
     id = models.AutoField(primary_key=True)
+    belongs_to = models.ForeignKey(Teams, on_delete=models.CASCADE)
+    title = models.CharField(max_length=400)
+    desc = models.TextField()
+    assigned_members = models.ManyToManyField(User, through='MembershipToTask', related_name="memberOfTask")
+    status = models.IntegerField(default=0)
+
+
+class MembershipToTask(models.Model):
+    member = models.ForeignKey(User, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+
 
 class Membership(models.Model):
     member = models.ForeignKey(User, on_delete=models.CASCADE)
