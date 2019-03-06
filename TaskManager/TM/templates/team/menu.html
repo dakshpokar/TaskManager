@@ -1,0 +1,77 @@
+{% load static %}
+<!-- Sidebar -->
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+ <!-- Sidebar - Brand -->
+ <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/dashboard/">
+  <div class="sidebar-brand-icon">
+      <h5>IIT Bombay</h5>
+    </div>
+</a>
+<!-- Divider -->
+<hr class="sidebar-divider my-0">
+<li class="nav-item">
+  <a class="nav-link" href="/">
+    <i class="fas fa-home"></i>
+  <span>Main Dashboard</span></a>
+</li>
+<!-- Nav Item - Dashboard -->
+<hr class="sidebar-divider my-0">
+
+        <li class="nav-item {%  if "dashboard" in request.path %} active {%  endif %}">
+          <a class="nav-link" href="/team/{{  team.url  }}/dashboard/">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Team Dashboard</span></a>
+        </li>
+        <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+              Tasks Management
+            </div>
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item {%  if "create-task" in request.path %}active{%  endif %}">
+                <a class="nav-link" href="/team/{{ team.url  }}/create-task/">
+                  <i class="fas fa-fw fa-plus"></i>
+                  <span>Create Task</span></a>
+              </li>
+              <li class="nav-item {%  if "tasks" in request.path %}active{%  endif %}">
+                <a class="nav-link" href="/team/{{ team.url  }}/tasks/">
+                  <i class="fas fa-fw fa-briefcase"></i>
+                  <span>Tasks</span></a>
+              </li>
+        
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+      
+        
+  
+        <!-- Heading -->
+        <div class="sidebar-heading">
+          Account
+        </div>
+  
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item {%  if "profile" in request.path %}active{%  endif %}">
+            <a class="nav-link" href="/team/{{  team.url  }}/members/">
+              <i class="fas fa-fw fa-users"></i>
+              <span>Members</span></a>
+              
+          </li>  
+          <li class="nav-item {%  if "settings" in request.path %}active{%  endif %}">
+            <a class="nav-link" href="/team/{{ team.url  }}/settings/">
+              <i class="fas fa-fw fa-cog"></i>
+              <span>Settings</span></a>
+          </li>
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+  
+    
+    
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+          <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+  
+      </ul>
+      <!-- End of Sidebar -->
+  

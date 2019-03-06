@@ -58,7 +58,7 @@ class RegisterView(TemplateView):
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
-    login_url = '../login/'
+    login_url = '/../login/'
     template_name = "dashboard.html"
     def get(self, request):
         user = request.user
@@ -69,7 +69,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
 
 class CreateTeamView(LoginRequiredMixin, TemplateView):
-    login_url = '../login/'
+    login_url = '/../login/'
     template_name = "create-team.html"
     def get(self, request):
         form = CreateTeamForm()
@@ -103,7 +103,7 @@ class CreateTeamView(LoginRequiredMixin, TemplateView):
 
 
 class TeamView(LoginRequiredMixin, TemplateView):
-    login_url = '../login/'
+    login_url = '/../login/'
     template_name="teams.html"
     def get(self, request):
         user = request.user
@@ -113,14 +113,78 @@ class TeamView(LoginRequiredMixin, TemplateView):
     def post(self, request):
         return
 
-class SpecificTeamView(TemplateView):
+class SpecificTeamView(LoginRequiredMixin, TemplateView):
+    template_name="team/dashboard.html"
+    login_url='/../login'
     def get(self, request):
-        return
+        user = request.user
+        us = UserProfile.objects.get(user=user)
+        team = Teams.objects.get(url=request.path.split("/")[2])
+        return render(request, self.template_name, {'user': user, 'us': us, 'team': team})
     def post(self, request):
         return
 
 class ProfileView(TemplateView):
+    template_name="profile.html"
+    template_404="404.html"
     def get(self, request):
+        url = request.path
+        url = url.split("/")
+        us = UserProfile.objects.filter(username=url[2])
+        if(us):
+            us = UserProfile.objects.get(username=url[2])
+        else:
+            return render(request, self.template_404)
+        user = us.user
+        if(url[1] == "profile"):
+            return render(request, self.template_name, {'user': user, 'us': us, 'logged_in': request.user.is_authenticated})
+        else:
+            return render(request, self.templ_404)
         return
+    def post(self, request):
+        return
+
+
+class CreateTaskView(LoginRequiredMixin, TemplateView):
+    template_name="team/create-task.html"
+    login_url='/../login'
+    def get(self, request):
+        user = request.user
+        us = UserProfile.objects.get(user=user)
+        team = Teams.objects.get(url=request.path.split("/")[2])
+        return render(request, self.template_name, {'user': user, 'us': us, 'team': team})
+    def post(self, request):
+        return
+
+class TasksView(LoginRequiredMixin, TemplateView):
+    template_name="team/tasks.html"
+    login_url='/../login'
+    def get(self, request):
+        user = request.user
+        us = UserProfile.objects.get(user=user)
+        team = Teams.objects.get(url=request.path.split("/")[2])
+        return render(request, self.template_name, {'user': user, 'us': us, 'team': team})
+    def post(self, request):
+        return
+
+class MembersView(LoginRequiredMixin, TemplateView):
+    template_name="team/members.html"
+    login_url='/../login'
+    def get(self, request):
+        user = request.user
+        us = UserProfile.objects.get(user=user)
+        team = Teams.objects.get(url=request.path.split("/")[2])
+        return render(request, self.template_name, {'user': user, 'us': us, 'team': team})
+    def post(self, request):
+        return
+
+class TeamSettingsView(LoginRequiredMixin, TemplateView):    
+    template_name="team/settings.html"
+    login_url='/../login'
+    def get(self, request):
+        user = request.user
+        us = UserProfile.objects.get(user=user)
+        team = Teams.objects.get(url=request.path.split("/")[2])
+        return render(request, self.template_name, {'user': user, 'us': us, 'team': team})
     def post(self, request):
         return

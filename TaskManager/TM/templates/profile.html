@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  
+  <title>{{ user.first_name }} {{ user.last_name  }} - Task Manager</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+
+</head>
+<style type="text/css">
+.x{
+  margin-bottom: 1.5rem;
+}
+</style>
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <!-- Begin Page Content -->
+        <div class="container" style="margin-top:30px">
+
+          <!-- Page Heading -->
+          {%  if logged_in %}
+          <div style="margin-bottom: 30px"><a href="/">&larr; Back to Dashboard</a></div>
+          {%  endif %}
+
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+
+          <span class="d-sm-flex align-items-center mb-4">
+              <img class="img-profile rounded-circle" style="height: 60px" src="{{ MEDIA_ROOT }}{{ us.profile_picture.url }}">
+
+            <h1 style="margin-left: 20px" class="h3 mb-0 text-gray-800">
+              {{  user.first_name }} {{ user.last_name  }} (@{{ us.username }})
+            </h1>
+            
+          </span>
+          </div>
+
+          <!-- Content Row -->
+
+          <div class="row">
+
+            <!-- Area Chart -->
+            <div class="col-xl-6">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Introduction</h6>
+                  
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                  To enhance my skills and to improve my productivity by managing my tasks using effective time management.
+                </div>
+              </div>
+                 <!-- Project Card Example -->
+                 {% if logged_in  %}
+                 <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                      <h6 class="m-0 font-weight-bold text-primary">Email</h6>
+                    </div>
+                    <div class="card-body">
+                      {{  user.username  }}
+                    </div>
+                  </div>
+                  {%  endif %}
+                  
+              
+            </div>
+
+            <!-- Pie Chart -->
+            <div class="col-xl-6">
+                <div class="card border-left-primary shadow py-2 x">
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Internships</div>
+                          <div class="h5 mb-0 font-weight-bold text-gray-800">{{  reto.internships  }}</div>
+                        </div>
+                        <div class="col-auto">
+                          <i class="fas fa-briefcase fa-2x text-gray-300"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card border-left-primary shadow py-2 x">
+                      <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                          <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Projects</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">10</div>
+                          </div>
+                          <div class="col-auto">
+                            <i class="fas fa-tasks fa-2x text-gray-300"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
+                  
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body">
+                  <div class="chart-pie pt-4 pb-2">
+                    <canvas id="myPieChart"></canvas>
+                  </div>
+                  <div class="mt-4 text-center small">
+                    <span class="mr-2">
+                      <i class="fas fa-circle text-primary"></i> Machine Learning
+                    </span>
+                    <span class="mr-2">
+                      <i class="fas fa-circle text-success"></i> Artificial Intelligence
+                    </span>
+                    <span class="mr-2">
+                      <i class="fas fa-circle text-info"></i> Blockchain
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Illustrations -->
+           
+            </div>
+            
+          </div>
+
+          <!-- Content Row -->
+          <div class="row">
+
+            <!-- Content Column -->
+            <div class="col-lg-6 mb-4">
+
+           
+
+            </div>
+
+            <div class="col-lg-6 mb-4">
+
+
+           
+
+            </div>
+          </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      {% block footer %}
+      {% include "footer.html" %}
+    {% endblock %}
+
+      <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Logout Modal-->
+  
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+
+  <!-- Page level plugins -->
+  <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
+  <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+
+</body>
+
+</html>

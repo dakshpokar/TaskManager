@@ -12,7 +12,7 @@
   <meta name="author" content="">
 
   
-  <title>Teams - Task Manager</title>
+  <title>Create Task - {{ team.name }} - Task Manager</title>
 
   <!-- Custom fonts for this template-->
   <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
@@ -22,6 +22,49 @@
   <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
 
 </head>
+<style type="text/css">
+    .form-control-user {
+        font-size: .8rem;
+        border-radius: 10rem;
+        padding: 1rem;
+        width: 100%;
+        height: 100%;
+        text-decoration: none;
+        outline: none;
+        border: 1px solid #d1d3e2;
+    }
+    </style>
+<script type="text/javascript">
+    var deg = 0
+    function del(i){
+        var x = document.getElementById("mem-"+i.toString())
+        x.remove()
+    }
+    function createProjects(){
+      var adam = document.getElementById("adam")
+      var input = document.createElement("input")
+      var div = document.createElement("div")
+      var del = document.createElement("a")
+      div.setAttribute("id", "mem-"+deg.toString())
+      div.setAttribute("class", "input-group")
+      del.setAttribute("onclick", "del("+deg.toString()+")")
+      del.setAttribute("class", "btn btn-danger btn-circle")
+      del.setAttribute("style", "height: 3.2rem; width: 3.2rem")
+      var i = document.createElement("i")
+      i.setAttribute("class", "fa fa-minus")
+      i.setAttribute("style", "color: #fff")
+      del.appendChild(i)
+      input.setAttribute("type", "text")
+      input.setAttribute("name", "member-"+deg.toString())
+      deg = deg + 1
+      input.setAttribute("class", "form-control form-control-user")
+      input.setAttribute("placeholder", "Member Username")
+      input.setAttribute("style", "margin-bottom: 10px; margin-right: 5px; border-radius: 10rem;")
+      div.appendChild(input)
+      div.appendChild(del)
+      adam.appendChild(div)
+    }
+    </script>
 <body id="page-top">
 
   <!-- Page Wrapper -->
@@ -29,7 +72,7 @@
 
     <!-- SideBar Code -->
     {% block sidebar %}
-      {% include "menu.html" %}
+      {% include "team/menu.html" %}
     {% endblock %}
     <!-- SideBar End -->
 
@@ -41,7 +84,7 @@
 
         <!-- Topbar -->
         {% block topbar %}
-        {% include "topbar.html" %}
+        {% include "team/topbar.html" %}
       {% endblock %}
         <!-- End of Topbar -->
 
@@ -50,7 +93,7 @@
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Teams</h1>
+            <h1 class="h3 mb-0 text-gray-800">Create Team</h1>
           </div>
           <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -59,61 +102,61 @@
             <div class="col-xl-2"></div>
             <!-- Area Chart -->
             <div class="col-xl-8">
+                {% if error %}
+                <div class="alert alert-danger" role="alert">
+                  {%  if error_msg != ""  %}
+                  {{  error_msg }}
+                  {%  else  %}
+                    Entered information is invalid!
+                  {%  endif %}
+                  </div>
+                  
+                  {% endif %}
+                  
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Your Teams </h6>
-                 
+                  <h6 class="m-0 font-weight-bold text-primary">Enter the name of Team </h6>
+                  
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                        <div class="card-body">
-                                <div class="table-responsive">
-                                  <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                        <thead>
-                                                <tr>
-                                                  <th>Name</th>
-                                                  <th>URL</th>
-                                                  <th>Members</th>
-                                                  <th>Open</th>
-                                                </tr>
-                                              </thead>
-                                              <tfoot>
-                                                    <tr>
-                                                      <th>Name</th>
-                                                      <th>URL</th>
-                                                      <th>Members</th>
-                                                      <th>Open</th>
-                                                    </tr>
-                                                </tfoot>
-                                                <tbody>
-                                                        {%    for i in teams.all  %}
-                                                    <tr>
-                                                        <td>{{  i.name   }}</td>
-                                                        <td>{{  i.url   }}</td>
-                                                        <td>{{  i.members.count }}</td>
-                                                        <td><a href="/team/{{ i.url }}/dashboard/"><i class="fas fa-external-link-alt"></i></a></td>
-                                                    </tr>
-                                                    {%  endfor  %}
-                                                </tbody>
-                                                </table>
-                                                </div>
-                                              </div>
+                    {{  form.name }}
                 </div>
               </div>
               <div class="card shadow mb-4">
-                    <!-- Card Header - Dropdown -->
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                      <h6 class="m-0 font-weight-bold text-primary">Joined Teams</h6>
-                      
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Add Users to Team </h6>
+                  
+                </div>
+                <!-- Card Body -->
+                <div class="card-body"><div id="adam" style="width: 100%; margin-bottom: 10px">
                     </div>
-                    <!-- Card Body -->
-                    <div class="card-body">
+                        <div class="row" style="margin-top: 10px">
+                                <div class="col-5"></div>
+                                <div class="col-2" align="center">
+                                    
+                                        <a onclick="createProjects()" style="color: #fff" class="btn btn-primary btn-circle">
+                                                <i class="fa fa-plus"></i>
+                                              </a>
+                                </div>
+                                <div class="col-5"></div>
+                              </div>
+                        </div>
                         
-                    </div>
-                  </div>
-            
-             
+              </div>
+              <div class="row">
+                    <div class="col-12 text-right">
+                    <button name="greet2" class="btn btn-primary btn-icon-split">
+                              <span class="icon text-white-50">
+                                <i class="fas fa-arrow-right"></i>
+                              </span>
+                              <span class="text">Next</span>
+                    </button></div>
+                          
+                                    
+                          </div>
             </div>
 
             <div class="col-xl-2"></div>
