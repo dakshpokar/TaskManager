@@ -26,6 +26,7 @@ class Task(models.Model):
     assigned_members = models.ManyToManyField(User, through='MembershipToTask', related_name="memberOfTask")
     status = models.IntegerField(default=0)
     date_created = models.DateTimeField(auto_now_add=True)
+    url = models.CharField(max_length=400)
 
 
 class MembershipToTask(models.Model):
