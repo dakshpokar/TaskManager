@@ -179,7 +179,7 @@
                                                           {%    for i in joined_teams.all  %}
                                                           {%  if i.team.admin != user %}
                                                       <tr>
-                                                          <td><a href="/team/{{ i.url }}/dashboard/">{{  i.team.name   }}</a></td>
+                                                          <td><a href="/team/{{ i.team.url }}/dashboard/">{{  i.team.name   }}</a></td>
                                                           <td>{{  i.team.url   }}</td>
                                                           <td>{{  i.team.members.count }}</td>
                                                           <td><a href="/team/{{ i.team.url }}/dashboard/"><i class="fas fa-external-link-alt"></i></a></td>
