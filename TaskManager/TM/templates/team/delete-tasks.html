@@ -12,7 +12,7 @@
   <meta name="author" content="">
 
   
-  <title>Teams - Task Manager</title>
+  <title>Delete - {{ task.title }} - Task Manager</title>
 
   <!-- Custom fonts for this template-->
   <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
@@ -20,9 +20,20 @@
 
   <!-- Custom styles for this template-->
   <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
-  <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
 
 </head>
+<style type="text/css">
+    .form-control-user {
+        font-size: .8rem;
+        border-radius: 10rem;
+        padding: 1rem;
+        width: 100%;
+        height: 100%;
+        text-decoration: none;
+        outline: none;
+        border: 1px solid #d1d3e2;
+    }
+    </style>
 <body id="page-top">
 
   <!-- Page Wrapper -->
@@ -51,7 +62,7 @@
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Tasks</h1>
+            <h1 class="h3 mb-0 text-gray-800">Delete {{ tasks.title }}</h1>
           </div>
           <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -60,69 +71,42 @@
             <div class="col-xl-2"></div>
             <!-- Area Chart -->
             <div class="col-xl-8">
+                {% if error %}
+                <div class="alert alert-danger" role="alert">
+                  {%  if error_msg != ""  %}
+                  {{  error_msg }}
+                  {%  else  %}
+                    Entered information is invalid!
+                  {%  endif %}
+                  </div>
+                  
+                  {% endif %}
+                  
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Tasks ({{tasks.all.count}})</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Enter your credentials</h6>
                   
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                  <thead>
-                                    <tr>
-                                      <th>Title</th>
-                                      <th>Description</th>
-                                      <th>Date Created</th>
-                                      <th>Assigned Members</th>
-                                      <th>Status</th>
-                                      <th>Options</th>
-                                    </tr>
-                                  </thead>
-                                  <tfoot>
-                                    <tr>
-                                        <th>Title</th>
-                                        <th>Description</th>
-                                        <th>Date Created</th>
-                                        <th>Assigned Members</th>
-                                        <th>Status</th>
-                                        <th>Options</th>
-
-                                    </tr>
-                                  </tfoot>
-                                  <tbody>
-                                      {%  for i in tasks.all  %}
-                                    <tr>
-                                      <td>{{ i.title }}</td>
-                                      <td>{{ i.desc }}</td>
-                                      <td>{{ i.date_created }}</td>
-                                      <td>
-                                        {%  for j in i.assigned_members.all  %}
-                                        {%  if j != team.admin  %}
-                                          {{  j.first_name  }} {{ j.last_name }}<br>
-                                          {%  endif %}
-                                        {%  endfor  %}
-                                      </td>
-                                      <td>
-                                        {%  if i.status == 0  %}Planned{%  elif i.status == 1  %}In Progress{%  elif i.status == 2  %}Done{%  endif %}
-                                      </td>
-                                      <td>
-                                        <a href="/team/{{ team.url }}/tasks/{{ i.url }}/"><i class="fas fa-external-link-alt"></i></a>
-                                        <a href="/team/{{ team.url }}/tasks/{{ i.url }}/delete/" style="margin-left: 10px"><i class="fas fa-trash"></i></a>
-                                      </td>
-                                                        
-                                    </tr>
-                                    {%  endfor %}
-
-                                  </tbody>
-                                </table>
-                              </div>
-
-                                </div>
+                    {{  form.email }}
+                    <br>
+                    {{  form.password }}
                 </div>
               </div>
+             
+              <div class="row">
+                    <div class="col-12 text-right">
+                    <button name="greet2" class="btn btn-primary btn-icon-split">
+                              <span class="icon text-white-50">
+                                <i class="fas fa-arrow-right"></i>
+                              </span>
+                              <span class="text">Next</span>
+                    </button></div>
+                          
+                                    
+                          </div>
             </div>
 
             <div class="col-xl-2"></div>
@@ -183,11 +167,13 @@
   <!-- Custom scripts for all pages-->
   <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
 
-  <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
-  <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+  <!-- Page level plugins -->
+  <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
 
   <!-- Page level custom scripts -->
-  <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+  <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
+  <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+
 </body>
 
 </html>
