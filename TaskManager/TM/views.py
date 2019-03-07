@@ -300,21 +300,21 @@ class SpecificTaskView(LoginRequiredMixin, TemplateView):
         us = UserProfile.objects.get(user=user)
         team = Teams.objects.get(url=request.path.split("/")[2])
         tasks = Task.objects.get(url=request.path.split("/")[4])
-        form = LoginForm()
-        return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks})
+        comments = Comments.objects.filter(task=tasks)
+        form = CommentsForm()
+        return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks, 'comments': comments})
     def post(self, request):
         user = request.user
         us = UserProfile.objects.get(user=user)
         team = Teams.objects.get(url=request.path.split("/")[2])
         tasks = Task.objects.get(url=request.path.split("/")[4])
-        form = LoginForm(request.POST)
+        comments = Comments.objects.filter(task=tasks)
+        form = CommentsForm(request.POST)
         if request.method == "POST":
             if form.is_valid():
-                email_addr = form.cleaned_data["email"]
-                password = form.cleaned_data["password"]
-                user = authenticate(request, username=email_addr, password=password)
-                if user is not None:
-                    tasks.delete()
-                    return redirect("../../")
-                else:
-                    return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks, 'error': True, 'error_msg': "Wrong Credentials"})
+                message = form.cleaned_data["message"]
+                comment = Comments.objects.create(task=tasks, user=user, message=message)
+                comment.save()
+                return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks, 'comments': comments})
+            else:
+                return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks, 'comments': comments, 'error': True, 'error-msg': "Error in Commenting"})

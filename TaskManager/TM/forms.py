@@ -18,3 +18,6 @@ class CreateTeamForm(forms.Form):
 class CreateTaskForm(forms.Form):
     title = forms.CharField(label="", widget=forms.TextInput(attrs={'id':'title', 'class':'form-control form-control-user', 'placeholder':'Task Title'}))
     desc = forms.CharField(label="", widget=forms.Textarea(attrs={'id':'desc','placeholder':'Task Description (Can be in HTML)', 'onkeyup':'displayer()'}))
+
+class CommentsForm(forms.Form):
+    message = forms.CharField(label="", widget=forms.Textarea(attrs={'id':'desc','placeholder':'Type your comment (Can be in HTML)', 'style':'height:100px; width: 100%'}))
