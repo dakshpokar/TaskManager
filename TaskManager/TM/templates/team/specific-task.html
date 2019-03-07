@@ -20,6 +20,7 @@
 
   <!-- Custom styles for this template-->
   <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
 
 </head>
 <style type="text/css">
@@ -105,28 +106,35 @@
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                               <h6 class="m-0 font-weight-bold text-primary">Comments</h6>
                             </div>
-                            <!-- Card Body -->
                             <div class="card-body">
-                                {%  for i in comments.all    %}
-                                <div class="row">
-                                    <div class="col-1-sm ml-4"><span class="d-sm-flex align-items-center">
-                                            <img class="img-profile rounded-circle" style="height: 30px" src="{{ MEDIA_ROOT }}{{ us.profile_picture.url }}">
-                                        </span></div>
-                                <div class="col-11 ml-4">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <h4 style="float: left">{{  i.user.first_name    }} {{   i.user.last_name }} </h4><h6 style="float: right">{{  i.date_generated  }}</h6> </div>  
-                                        
-                                            </div>
-                                                <div class="row">
-                                                    <div class="col-12">{{ i.message }}</div>  
-                                        </div> 
-                                    </div>
-                                    
-                            </div>
-                             <hr>
-                                {%  endfor  %}
-                            </div>
+                                    <div class="card-body">
+                                            <div class="table-responsive">
+                                              
+                                              <table class="table" id="dataTable" width="100%" cellspacing="0">
+                                                        <thead style="display: none">
+                                                            <tr>
+                                                                <th></th>
+                                                                <th></th>
+                                                                <th></th>
+                                                            </tr>
+                                                        </thead>
+                                                          <tbody>
+                                                                {%  for i in comments.all %}
+                                                                    <tr>
+                                                                        <td style="width: 7%; text-align: center;"><img class="img-profile rounded-circle" style="height: 30px" src="{{ MEDIA_ROOT }}{{ us.profile_picture.url }}"></td>
+                                                                        <td style="width: 78%"><h4>{{  i.user.first_name    }} {{   i.user.last_name }} </h4>                                                                        
+                                                                                {{ i.message }}
+                                                                        </td>
+                                                                        <td style="width: 15%;"><h6>{{  i.date_generated  }}</h6></td>
+
+                                                                    </tr>
+                                                                {%  endfor %}
+                                                          </tbody>
+                                                          </table>
+                                                          </div>
+                                                          </div>
+                                                        </div>
+                           
                           </div>    
                           <form method="post" enctype="multipart/form-data">
                             {% csrf_token %}   
@@ -204,12 +212,13 @@
   <!-- Custom scripts for all pages-->
   <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
 
+
   <!-- Page level plugins -->
-  <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+  <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
 
   <!-- Page level custom scripts -->
-  <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
-  <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+  <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
 
 </body>
 
