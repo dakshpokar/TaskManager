@@ -143,7 +143,11 @@ class ProfileView(TemplateView):
             return render(request, self.template_404)
         user = us.user
         if(url[1] == "profile"):
-            return render(request, self.template_name, {'user': user, 'us': us, 'logged_in': request.user.is_authenticated})
+            if request.user == us.user:
+                log = request.user.is_authenticated
+            else:
+                log = False
+            return render(request, self.template_name, {'user': user, 'us': us, 'logged_in': log})
         else:
             return render(request, self.templ_404)
         return
