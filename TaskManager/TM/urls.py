@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.urls import path
-from TM.views import LoginView, RegisterView, DashboardView, CreateTeamView, logout_view, TeamView, SettingsView, ProfileView, SpecificTeamView, CreateTaskView, DeleteTasks, TasksView, DeleteTeam, MembersView, TeamSettingsView
+from TM.views import LoginView, RegisterView, DashboardView, CreateTeamView, logout_view, TeamView, SettingsView, ProfileView, SpecificTeamView, CreateTaskView, DeleteTasks, SpecificTaskView, TasksView, DeleteTeam, MembersView, TeamSettingsView
 
 urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
@@ -19,5 +19,7 @@ urlpatterns = [
     url(r'^team\/[a-zA-z0-9]+\/settings\/$', TeamSettingsView.as_view(), name="settings"),
     url(r'^team\/[a-zA-z0-9]+\/delete\/$', DeleteTeam.as_view(), name="delete"),
     url(r'^team\/[a-zA-z0-9]+\/tasks\/[a-zA-z0-9]+\/delete\/$', DeleteTasks.as_view(), name="delete"),
+    url(r'^team\/[a-zA-z0-9]+\/tasks\/[a-zA-z0-9]+\/$', SpecificTaskView.as_view(), name="specific-task"),
+
 
 ]

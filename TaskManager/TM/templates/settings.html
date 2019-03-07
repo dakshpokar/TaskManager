@@ -20,8 +20,40 @@
 
   <!-- Custom styles for this template-->
   <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 </head>
+<style type="text/css">
+  .form-control-user {
+      font-size: .8rem;
+      border-radius: 10rem;
+      padding: 1rem;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      outline: none;
+      border: 1px solid #d1d3e2;
+  }
+  .kv-avatar .krajee-default.file-preview-frame,.kv-avatar .krajee-default.file-preview-frame:hover {
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    text-align: center;
+}
+.kv-avatar {
+    display: inline-block;
+}
+.kv-avatar .file-input {
+    display: table-cell;
+    width: 213px;
+}
+.kv-reqd {
+    color: red;
+    font-family: monospace;
+    font-weight: normal;
+}
+  </style>
 
 <body id="page-top">
 
@@ -53,9 +85,112 @@
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Settings</h1>
           </div>
+          <div class="row">
 
-                 
-           
+            <div class="col-8">
+          <div class="row">
+            <div class="col-6">
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h6 class="m-0 font-weight-bold text-primary">First Name</h6>
+                      
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                            <input type="text" name="first_name" value="{{  user.first_name }}" class="form-control form-control-user" placeholder="Enter the First Name" required>
+                          </div>
+                    </div>
+            </div>
+            <div class="col-6">
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h6 class="m-0 font-weight-bold text-primary">Last Name</h6>
+                      
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                            <input type="text" name="last_name" value="{{  user.last_name }}"class="form-control form-control-user" placeholder="Enter the Last Name" required>
+                          </div>
+                    </div>
+
+            </div>
+          </div>
+         <div class="row">
+           <div class="col-12">
+              <div class="card shadow mb-4">
+                  <!-- Card Header - Dropdown -->
+                  <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Email</h6>
+                    
+                  </div>
+                  <!-- Card Body -->
+                  <div class="card-body">
+                          <input type="text" name="email" value="{{  user.username }}" class="form-control form-control-user" placeholder="Enter the Email Address" required>
+                        </div>
+                  </div>
+           </div>
+         </div>
+
+         <div class="row">
+            <div class="col-12">
+               <div class="card shadow mb-4">
+                   <!-- Card Header - Dropdown -->
+                   <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                     <h6 class="m-0 font-weight-bold text-primary">Username</h6>
+                     
+                   </div>
+                   <!-- Card Body -->
+                   <div class="card-body">
+                           <input type="text" name="username" value="{{  us.username }}"class="form-control form-control-user" placeholder="Enter the User Name" required>
+                         </div>
+                   </div>
+            </div>
+          </div>
+         
+        </div>
+        <div class="col-4">
+
+          
+         <div class="row">
+            <div class="col-12">
+               <div class="card shadow mb-4" >
+                   <!-- Card Header - Dropdown -->
+                   <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                     <h6 class="m-0 font-weight-bold text-primary">Profile Picture</h6>
+                     
+                   </div>
+                   <!-- Card Body -->
+                   <div class="card-body">
+                      <div id="kv-avatar-errors-2" class="center-block" style="width:800px;display:none"></div>
+
+                      <div class="col-sm-4 text-center">
+                          <div class="kv-avatar">
+                              <div class="file-loading">
+                                  <input id="avatar-2" name="avatar-2" type="file" required>
+                              </div>
+                          </div>
+                          </div>
+                       </div>
+                   </div>
+                   <div class="row">
+                      <div class="col-12 text-right">
+                      <button name="task-creation" class="btn btn-primary btn-icon-split">
+                                <span class="icon text-white-50">
+                                  <i class="fas fa-arrow-right"></i>
+                                </span>
+                                <span class="text">Update Profile</span>
+                      </button></div>
+                            
+                  </div>
+            </div>
+          </div>
+        </div>
+        
+
+        </div>
+        
 
           </div>
 
@@ -101,6 +236,7 @@
   </div>
 
   <!-- Bootstrap core JavaScript-->
+
   <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
   <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
@@ -110,13 +246,28 @@
   <!-- Custom scripts for all pages-->
   <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
 
-  <!-- Page level plugins -->
-  <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
-
-  <!-- Page level custom scripts -->
-  <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
-  <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
-
+  <script type="text/javascript">
+    var btnCust = '<button type="button" class="btn btn-secondary" title="Add picture tags" ' + 
+        'onclick="alert(\'Call your custom code here.\')">' +
+        '<i class="glyphicon glyphicon-tag"></i>' +
+        '</button>'; 
+    document.getElementById("avatar-2").fileinput({
+        overwriteInitial: true,
+        maxFileSize: 1500,
+        showClose: false,
+        showCaption: false,
+        showBrowse: false,
+        browseOnZoneClick: true,
+        removeLabel: '',
+        removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+        removeTitle: 'Cancel or reset changes',
+        elErrorContainer: '#kv-avatar-errors-2',
+        msgErrorClass: 'alert alert-block alert-danger',
+        defaultPreviewContent: '<img src="/uploads/default_avatar_male.jpg" alt="Your Avatar"><h6 class="text-muted">Click to select</h6>',
+        layoutTemplates: {main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+        allowedFileExtensions: ["jpg", "png", "gif"]
+    });
+    </script>
 </body>
 
 </html>

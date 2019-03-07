@@ -256,13 +256,44 @@ class DeleteTeam(LoginRequiredMixin, TemplateView):
                 password = form.cleaned_data["password"]
                 user = authenticate(request, username=email_addr, password=password)
                 if user is not None:
-                    team.delete()
-                    return redirect("/")
+                    if user == team.admin:
+                        team.delete()
+                        return redirect("/")
+                    else:
+                        return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'error': True, 'error_msg': "You are not allowed to do that!"})
                 else:
                     return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'error': True, 'error_msg': "Wrong Credentials"})
 
 class DeleteTasks(LoginRequiredMixin, TemplateView):
     template_name="team/delete-tasks.html"
+    login_url='/../login'
+    def get(self, request):
+        user = request.user
+        us = UserProfile.objects.get(user=user)
+        team = Teams.objects.get(url=request.path.split("/")[2])
+        tasks = Task.objects.get(url=request.path.split("/")[4])
+        form = LoginForm()
+        return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks})
+    def post(self, request):
+        user = request.user
+        us = UserProfile.objects.get(user=user)
+        team = Teams.objects.get(url=request.path.split("/")[2])
+        tasks = Task.objects.get(url=request.path.split("/")[4])
+        form = LoginForm(request.POST)
+        if request.method == "POST":
+            if form.is_valid():
+                email_addr = form.cleaned_data["email"]
+                password = form.cleaned_data["password"]
+                user = authenticate(request, username=email_addr, password=password)
+                if user is not None:
+                    tasks.delete()
+                    return redirect("../../")
+                else:
+                    return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks, 'error': True, 'error_msg': "Wrong Credentials"})
+
+
+class SpecificTaskView(LoginRequiredMixin, TemplateView):
+    template_name="team/specific-task.html"
     login_url='/../login'
     def get(self, request):
         user = request.user

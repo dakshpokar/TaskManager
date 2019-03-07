@@ -12,7 +12,7 @@
   <meta name="author" content="">
 
   
-  <title>Dashboard - Task Manager</title>
+  <title>Create Task - {{ team.name }} - Task Manager</title>
 
   <!-- Custom fonts for this template-->
   <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
@@ -22,15 +22,34 @@
   <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
 
 </head>
-
-<body id="page-top">
+<style type="text/css">
+    .form-control-user {
+        font-size: .8rem;
+        border-radius: 10rem;
+        padding: 1rem;
+        width: 100%;
+        height: 100%;
+        text-decoration: none;
+        outline: none;
+        border: 1px solid #d1d3e2;
+    }
+    </style>
+<script type="text/javascript">
+    var deg = 0
+    function displayer(){
+      var dis = document.getElementById("desc").value
+      var d = document.getElementById("des")
+      d.innerHTML = dis
+    }
+    </script>
+<body onload="displayer()" id="page-top">
 
   <!-- Page Wrapper -->
   <div id="wrapper">
 
     <!-- SideBar Code -->
     {% block sidebar %}
-      {% include "menu.html" %}
+      {% include "team/menu.html" %}
     {% endblock %}
     <!-- SideBar End -->
 
@@ -42,7 +61,7 @@
 
         <!-- Topbar -->
         {% block topbar %}
-        {% include "topbar.html" %}
+        {% include "team/topbar.html" %}
       {% endblock %}
         <!-- End of Topbar -->
 
@@ -51,42 +70,52 @@
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+            <h1 class="h3 mb-0 text-gray-800">{{  tasks.title   }}</h1>
+            <h6><strong>Date Created: </strong>{{  tasks.date_created   }}</h6>
           </div>
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+          <!-- Content Row -->
           <div class="row">
-            <div class="col-4 h-100">
-                <div class="px-3 h-100 py-5 bg-gradient-primary text-white text-center" >
-                  <h2>Create Team</h2>
-                  <div class="row" style="margin-bottom: -40px">
-                      <div class="col-12 text-right ">
-                          <i class="fas fa-arrow-right"></i>
-                      </div>
-                    </div>
+            <div class="col-xl-2"></div>
+            <!-- Area Chart -->
+            <div class="col-xl-8">
+                {% if error %}
+                <div class="alert alert-danger" role="alert">
+                  {%  if error_msg != ""  %}
+                  {{  error_msg }}
+                  {%  else  %}
+                    Entered information is invalid!
+                  {%  endif %}
+                  </div>
+                  
+                  {% endif %}
+                  
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Task Description</h6>
                 </div>
-                
-            </div>
-            <div class="col-4">
-                <div class="px-3 py-5 bg-gradient-success text-white text-center" >
-                    <h2>Manage Teams</h2>
-                    <div class="row" style="margin-bottom: -40px">
-                        <div class="col-12 text-right ">
-                            <i class="fas fa-arrow-right"></i>
-                        </div>
-                      </div>
-                  </div>
-            </div>
-            <div class="col-4">
-                <div class="px-3 py-5 bg-gradient-danger text-white text-center" >
-                    <h2>Settings</h2>
-                    <div class="row" style="margin-bottom: -40px">
-                        <div class="col-12 text-right ">
-                            <i class="fas fa-arrow-right"></i>
-                        </div>
-                      </div>
-                  </div>
-            </div>
-          </div>
+                <!-- Card Body -->
+                <div id="des" class="card-body">
+                    <input id="desc" type="hidden" value="{{  tasks.desc  }}">
+                </div>
+              </div>
+                    <div class="card shadow mb-4">
+                            <!-- Card Header - Dropdown -->
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                              <h6 class="m-0 font-weight-bold text-primary">Comments</h6>
+                            </div>
+                            <!-- Card Body -->
+                            <div id="des" class="card-body">
+                                <input id="desc" type="hidden" value="{{  tasks.desc  }}">
+                            </div>
+                          </div>        
+            </form>
         </div>
+      </div>
+
+    </div>
         <!-- /.container-fluid -->
 
       </div>
@@ -138,6 +167,13 @@
 
   <!-- Custom scripts for all pages-->
   <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+
+  <!-- Page level plugins -->
+  <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
+  <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
 
 </body>
 
