@@ -12,7 +12,7 @@
   <meta name="author" content="">
 
   
-  <title>Teams - Task Manager</title>
+  <title>Tasks - {{ team.name }} - Task Manager</title>
 
   <!-- Custom fonts for this template-->
   <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
@@ -100,9 +100,7 @@
                                       <td>{{ i.date_created }}</td>
                                       <td>
                                         {%  for j in i.assigned_members.all  %}
-                                        {%  if j != team.admin  %}
                                           {{  j.first_name  }} {{ j.last_name }}<br>
-                                          {%  endif %}
                                         {%  endfor  %}
                                       </td>
                                       <td>

@@ -177,10 +177,10 @@ class CreateTaskView(LoginRequiredMixin, TemplateView):
         us = UserProfile.objects.get(user=user)
         team = Teams.objects.get(url=request.path.split("/")[2])
         post = {}
-        user = []
+        usery = []
         for key, value in request.POST.items():
             if "user" in key:
-                user.append(value)
+                usery.append(value)
             else:
                 post[key] = value
         if request.method == "POST":
@@ -191,13 +191,16 @@ class CreateTaskView(LoginRequiredMixin, TemplateView):
                 task.status = STATUS[post["status"]]
                 task.url = task.title.lower() + str(task.id)
                 task.save()
-
-                for i in user:
+                m = MembershipToTask(member=user, task=task)
+                m.save()
+                for i in usery:
                     mem = User.objects.get(id = i)
                     m = MembershipToTask(member=mem, task=task)
                     m.save()
-                
-        return
+                return redirect("../tasks/")
+            else:
+                return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'form':  form, 'error': True, 'error_msg': "Entered Information is Invalid"})
+
 
 class TasksView(LoginRequiredMixin, TemplateView):
     template_name="team/tasks.html"
@@ -281,6 +284,6 @@ class DeleteTasks(LoginRequiredMixin, TemplateView):
                 user = authenticate(request, username=email_addr, password=password)
                 if user is not None:
                     tasks.delete()
-                    return redirect("/")
+                    return redirect("../../")
                 else:
                     return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks, 'error': True, 'error_msg': "Wrong Credentials"})
