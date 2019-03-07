@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
-from .models import Membership, Teams, UserProfile
+from TM.models import *
 
 def logout_view(request):
     logout(request)
@@ -157,7 +157,11 @@ class SettingsView(LoginRequiredMixin, TemplateView):
     def post(self, request):
         return    
 
-
+STATUS = {
+    'planned': 0,
+    'inprogress': 1,
+    'done': 2
+}
 class CreateTaskView(LoginRequiredMixin, TemplateView):
     template_name="team/create-task.html"
     login_url='/../login'
@@ -168,6 +172,29 @@ class CreateTaskView(LoginRequiredMixin, TemplateView):
         form = CreateTaskForm()
         return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'form':  form})
     def post(self, request):
+        form = CreateTaskForm(request.POST)
+        user = request.user
+        us = UserProfile.objects.get(user=user)
+        team = Teams.objects.get(url=request.path.split("/")[2])
+        post = {}
+        user = []
+        for key, value in request.POST.items():
+            if "user" in key:
+                user.append(value)
+            else:
+                post[key] = value
+        if request.method == "POST":
+            if form.is_valid():
+                task = Task.objects.create(belongs_to=team)
+                task.title = post["title"]
+                task.desc = post["desc"]
+                task.status = STATUS[post["status"]]
+                task.save()
+                for i in user:
+                    mem = User.objects.get(id = i)
+                    m = MembershipToTask(member=mem, task=task)
+                    m.save()
+                
         return
 
 class TasksView(LoginRequiredMixin, TemplateView):
@@ -177,7 +204,8 @@ class TasksView(LoginRequiredMixin, TemplateView):
         user = request.user
         us = UserProfile.objects.get(user=user)
         team = Teams.objects.get(url=request.path.split("/")[2])
-        return render(request, self.template_name, {'user': user, 'us': us, 'team': team})
+        tasks = Task.objects.filter(belongs_to=team)
+        return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'tasks': tasks})
     def post(self, request):
         return
 

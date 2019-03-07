@@ -25,6 +25,7 @@ class Task(models.Model):
     desc = models.TextField()
     assigned_members = models.ManyToManyField(User, through='MembershipToTask', related_name="memberOfTask")
     status = models.IntegerField(default=0)
+    date_created = models.DateTimeField(auto_now_add=True)
 
 
 class MembershipToTask(models.Model):
