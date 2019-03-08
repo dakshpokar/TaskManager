@@ -23,6 +23,7 @@
   <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
 
 </head>
+
 <body id="page-top">
 
   <!-- Page Wrapper -->
@@ -96,11 +97,18 @@
                                       {%  for i in tasks.all  %}
                                     <tr>
                                       <td>{{ i.title }}</td>
-                                      <td>{{ i.desc }}</td>
+                                      <td id="des"><input type="hidden" id="desc" value="{{ i.desc }}" />{{ i.desc }}
+                                        <script type="text/javascript">
+                                          var deg = 0
+                                            var dis = document.getElementById("desc").value
+                                            var d = document.getElementById("des")
+                                            dis = dis.replace(/<img[^>]*>/g,"");
+                                            d.innerHTML = dis
+                                          </script></td>
                                       <td>{{ i.date_created }}</td>
                                       <td>
                                         {%  for j in i.assigned_members.all  %}
-                                          {{  j.first_name  }} {{ j.last_name }}<br>
+                                          {{  j.user.first_name  }} {{ j.user.last_name }}<br>
                                         {%  endfor  %}
                                       </td>
                                       <td>

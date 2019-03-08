@@ -85,8 +85,11 @@
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Settings</h1>
           </div>
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+          
           <div class="row">
-
+            
             <div class="col-8">
           <div class="row">
             <div class="col-6">
@@ -168,7 +171,7 @@
                       <div class="col-sm-4 text-center">
                           <div class="kv-avatar">
                               <div class="file-loading">
-                                  <input id="avatar-2" name="avatar-2" type="file" required>
+                                  {{  form.profile_picture }}
                               </div>
                           </div>
                           </div>
@@ -176,7 +179,7 @@
                    </div>
                    <div class="row">
                       <div class="col-12 text-right">
-                      <button name="task-creation" class="btn btn-primary btn-icon-split">
+                      <button name="update-profile" class="btn btn-primary btn-icon-split">
                                 <span class="icon text-white-50">
                                   <i class="fas fa-arrow-right"></i>
                                 </span>
@@ -191,6 +194,7 @@
 
         </div>
         
+        </form>
 
           </div>
 

@@ -121,8 +121,8 @@
                                                           <tbody>
                                                                 {%  for i in comments.all %}
                                                                     <tr>
-                                                                        <td style="width: 7%; text-align: center;"><img class="img-profile rounded-circle" style="height: 30px" src="{{ MEDIA_ROOT }}{{ us.profile_picture.url }}"></td>
-                                                                        <td style="width: 78%"><h4>{{  i.user.first_name    }} {{   i.user.last_name }} </h4>                                                                        
+                                                                        <td style="width: 7%; text-align: center;"><img class="img-profile rounded-circle" style="height: 30px" src="{{ MEDIA_ROOT }}{{ i.user.profile_picture.url }}"></td>
+                                                                        <td style="width: 78%"><h4>{{  i.user.user.first_name    }} {{   i.user.user.last_name }} </h4>                                                                        
                                                                                 {{ i.message }}
                                                                         </td>
                                                                         <td style="width: 15%;"><h6>{{  i.date_generated  }}</h6></td>

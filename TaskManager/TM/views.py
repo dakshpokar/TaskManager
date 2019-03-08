@@ -83,15 +83,15 @@ class CreateTeamView(LoginRequiredMixin, TemplateView):
             form = CreateTeamForm(request.POST)
             if form.is_valid():
                 name = form.cleaned_data["name"]
-                tea = Teams.objects.create(name=name, admin=user)
+                tea = Teams.objects.create(name=name, admin=us)
                 tea.url = tea.name.lower() + str(tea.id)
                 tea.save()
-                m = Membership(member=user, team=tea)
+                m = Membership(member=us, team=tea)
                 m.save()
                 for key, value in request.POST.items():
                     if("member" in key):
                         try:
-                            mem = User.objects.get(username=value)
+                            mem = UserProfile.objects.get(user=User.objects.get(username=value))
                             if mem is not None:
                                 m = Membership(member=mem, team=tea)
                                 m.save()
@@ -108,8 +108,8 @@ class TeamView(LoginRequiredMixin, TemplateView):
     def get(self, request):
         user = request.user
         us = UserProfile.objects.get(user=user)
-        teams = Teams.objects.filter(admin=user)
-        joined_teams = Membership.objects.filter(member=User.objects.get(username=user.username))
+        teams = Teams.objects.filter(admin=us)
+        joined_teams = Membership.objects.filter(member=UserProfile.objects.get(user=user))
         jt = None
         if joined_teams.all().count() == 1:
             jt = joined_teams.all()[0].team
@@ -124,7 +124,7 @@ class SpecificTeamView(LoginRequiredMixin, TemplateView):
         user = request.user
         us = UserProfile.objects.get(user=user)
         team = Teams.objects.get(url=request.path.split("/")[2])
-        if user not in team.members.all():
+        if us not in team.members.all():
             return redirect("/")
         return render(request, self.template_name, {'user': user, 'us': us, 'team': team})
     def post(self, request):
@@ -159,9 +159,26 @@ class SettingsView(LoginRequiredMixin, TemplateView):
     def get(self, request):
         user = request.user
         us = UserProfile.objects.get(user=user)
-        return render(request, self.template_name, {'user': user, 'us': us})
+        form = UpdateProfileForm()
+        return render(request, self.template_name, {'user': user, 'us': us, 'form': form})
     def post(self, request):
-        return    
+        user = request.user
+        us = UserProfile.objects.get(user=user)
+        if request.method == "POST":
+            post = {}
+            form = UpdateProfileForm(request.POST, request.FILES)
+            if form.is_valid():
+                for key, value in request.POST.items():
+                    post[key] = value
+                us.profile_picture = form.cleaned_data["profile_picture"]
+                us.first_name = post["first_name"]
+                us.last_name = post["last_name"]
+                us.username = post["username"]
+                us.save()
+                form = UpdateProfileForm()
+                return render(request, self.template_name, {'user': user, 'us': us, 'form': form})
+            else:
+                return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'error': True, 'error_msg': "Invalid Information!"})
 
 STATUS = {
     'planned': 0,
@@ -197,10 +214,10 @@ class CreateTaskView(LoginRequiredMixin, TemplateView):
                 task.status = STATUS[post["status"]]
                 task.url = task.title.lower() + str(task.id)
                 task.save()
-                m = MembershipToTask(member=user, task=task)
+                m = MembershipToTask(member=UserProfile.objects.get(user=user), task=task)
                 m.save()
                 for i in usery:
-                    mem = User.objects.get(id = i)
+                    mem = UserProfile.objects.get(user=User.objects.get(id = i))
                     m = MembershipToTask(member=mem, task=task)
                     m.save()
                 return redirect("../tasks/")
@@ -216,7 +233,7 @@ class TasksView(LoginRequiredMixin, TemplateView):
         us = UserProfile.objects.get(user=user)
         team = Teams.objects.get(url=request.path.split("/")[2])
         tasks = Task.objects.filter(belongs_to=team)
-        if user not in team.members.all():
+        if us not in team.members.all():
             return redirect("/")
         return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'tasks': tasks})
     def post(self, request):
@@ -229,7 +246,7 @@ class MembersView(LoginRequiredMixin, TemplateView):
         user = request.user
         us = UserProfile.objects.get(user=user)
         team = Teams.objects.get(url=request.path.split("/")[2])
-        if user not in team.members.all():
+        if us not in team.members.all():
             return redirect("/")
         return render(request, self.template_name, {'user': user, 'us': us, 'team': team})
     def post(self, request):
@@ -242,7 +259,7 @@ class TeamSettingsView(LoginRequiredMixin, TemplateView):
         user = request.user
         us = UserProfile.objects.get(user=user)
         team = Teams.objects.get(url=request.path.split("/")[2])
-        if user not in team.members.all():
+        if us not in team.members.all():
             return redirect("/")
         return render(request, self.template_name, {'user': user, 'us': us, 'team': team})
     def post(self, request):
@@ -256,7 +273,7 @@ class DeleteTeam(LoginRequiredMixin, TemplateView):
         us = UserProfile.objects.get(user=user)
         team = Teams.objects.get(url=request.path.split("/")[2])
         form = LoginForm()
-        if user not in team.members.all():
+        if us not in team.members.all():
             return redirect("/")
         return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team})
     def post(self, request):
@@ -289,7 +306,7 @@ class DeleteTasks(LoginRequiredMixin, TemplateView):
         team = Teams.objects.get(url=request.path.split("/")[2])
         tasks = Task.objects.get(url=request.path.split("/")[4])
         form = LoginForm()
-        if user not in team.members.all():
+        if us not in team.members.all():
             return redirect("/")
         return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks})
     def post(self, request):
@@ -320,7 +337,7 @@ class SpecificTaskView(LoginRequiredMixin, TemplateView):
         tasks = Task.objects.get(url=request.path.split("/")[4])
         comments = Comments.objects.filter(task=tasks)
         form = CommentsForm()
-        if user not in team.members.all():
+        if us not in team.members.all():
             return redirect("/")
         return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks, 'comments': comments})
     def post(self, request):
@@ -333,8 +350,9 @@ class SpecificTaskView(LoginRequiredMixin, TemplateView):
         if request.method == "POST":
             if form.is_valid():
                 message = form.cleaned_data["message"]
-                comment = Comments.objects.create(task=tasks, user=user, message=message)
+                comment = Comments.objects.create(task=tasks, user=UserProfile.objects.get(user=user), message=message)
                 comment.save()
+                form = CommentsForm()
                 return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks, 'comments': comments})
             else:
                 return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks, 'comments': comments, 'error': True, 'error-msg': "Error in Commenting"})

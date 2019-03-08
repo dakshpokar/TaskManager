@@ -139,11 +139,11 @@
                 </div>
                 <!-- Card Body -->
                   <div class="card-body">
-                      <input type="checkbox" disabled="disabled" checked="checked"> <label for="{{ team.admin.first_name  }}{{  team.admin.last_name }}">{{ team.admin.first_name }} {{ team.admin.last_name }}</label> 
+                      <input type="checkbox" disabled="disabled" checked="checked"> <label for="{{ team.admin.first_name  }}{{  team.admin.last_name }}">{{ team.admin.user.first_name }} {{ team.admin.user.last_name }}</label> 
                       <br>
                       {%  for i in team.members.all %}
                     {%  if i != team.admin %}
-                    <input type="checkbox" name="user{{ i.id }}" value="{{  i.id  }}"> <label for="{{ i.first_name  }}{{  i.last_name }}">{{ i.first_name }} {{ i.last_name }}</label> 
+                    <input type="checkbox" name="user{{ i.user.id }}" value="{{  i.user.id  }}"> <label for="{{ i.first_name  }}{{  i.last_name }}">{{ i.user.first_name }} {{ i.user.last_name }}</label> 
                     <br>
                     {%  endif %}
                     {%  endfor %}

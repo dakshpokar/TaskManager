@@ -21,3 +21,7 @@ class CreateTaskForm(forms.Form):
 
 class CommentsForm(forms.Form):
     message = forms.CharField(label="", widget=forms.Textarea(attrs={'id':'desc','placeholder':'Type your comment (Can be in HTML)', 'style':'height:100px; width: 100%'}))
+
+class UpdateProfileForm(forms.Form):
+    profile_picture = forms.ImageField(label="Profile Picture", required=False)
+
