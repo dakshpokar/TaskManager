@@ -170,6 +170,9 @@ class SettingsView(LoginRequiredMixin, TemplateView):
             if form.is_valid():
                 for key, value in request.POST.items():
                     post[key] = value
+                x = UserProfile.objects.filter(username=post["username"])
+                if x.count() > 0:
+                    return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'error': True, 'error_msg': "Username already exists!"})
                 us.profile_picture = form.cleaned_data["profile_picture"]
                 us.first_name = post["first_name"]
                 us.last_name = post["last_name"]
@@ -208,7 +211,7 @@ class CreateTaskView(LoginRequiredMixin, TemplateView):
                 post[key] = value
         if request.method == "POST":
             if form.is_valid():
-                task = Task.objects.create(belongs_to=team)
+                task = Task.objects.create(belongs_to=team, created_by=us)
                 task.title = post["title"]
                 task.desc = post["desc"]
                 task.status = STATUS[post["status"]]
@@ -263,7 +266,26 @@ class TeamSettingsView(LoginRequiredMixin, TemplateView):
             return redirect("/")
         return render(request, self.template_name, {'user': user, 'us': us, 'team': team})
     def post(self, request):
-        return
+        user = request.user
+        us = UserProfile.objects.get(user=user)
+        team = Teams.objects.get(url=request.path.split("/")[2])
+        if us not in team.members.all():
+            return redirect("/")
+        x = {}
+        for key, value in request.POST.items():
+            x[key] = value
+            if("member" in key):
+                try:
+                    mem = UserProfile.objects.get(user=User.objects.get(username=value))
+                    if mem is not None:
+                        m = Membership(member=mem, team=team)
+                        m.save()
+                except User.DoesNotExist:
+                    return render(request, self.template_name, {'form': form, 'us': us, 'user': user, 'error': True, 'error_msg': "User Does not exist: " + str(value)})  
+        team.name = x["name"]
+        team.url = x["url"]
+        team.save()  
+        return render(request, self.template_name, {'user': user, 'us': us, 'team': team})
 
 class DeleteTeam(LoginRequiredMixin, TemplateView):
     template_name="team/delete.html"
@@ -357,3 +379,10 @@ class SpecificTaskView(LoginRequiredMixin, TemplateView):
                 return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks, 'comments': comments})
             else:
                 return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks, 'comments': comments, 'error': True, 'error-msg': "Error in Commenting"})
+
+class DeleteTeamMember(LoginRequiredMixin, TemplateView):
+    login_url='/../login'
+    def get(self, request):
+        return
+    def post(self, request):
+        return
