@@ -281,15 +281,16 @@ class DeleteTeam(LoginRequiredMixin, TemplateView):
         us = UserProfile.objects.get(user=user)
         team = Teams.objects.get(url=request.path.split("/")[2])
         form = LoginForm(request.POST)
-        if user not in team.members.all():
+        if us not in team.members.all():
             return redirect("/")
         if request.method == "POST":
             if form.is_valid():
                 email_addr = form.cleaned_data["email"]
                 password = form.cleaned_data["password"]
                 user = authenticate(request, username=email_addr, password=password)
-                if user is not None:
-                    if user == team.admin:
+                us = UserProfile.objects.get(user=user)
+                if us is not None:
+                    if us == team.admin:
                         team.delete()
                         return redirect("/")
                     else:
