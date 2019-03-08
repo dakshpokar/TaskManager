@@ -393,5 +393,8 @@ class DeleteTeamMember(LoginRequiredMixin, TemplateView):
         if team.admin == us:
             Membership.objects.filter(member=del_user).delete()
             return redirect("../../../settings/")
+        elif request.path.split("/")[5] == "deleteself":
+            Membership.objects.filter(member=del_user).delete()
+            return redirect("/teams")
         else:
             return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'error': True, 'error_msg': "You are not admin!"})

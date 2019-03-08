@@ -183,9 +183,10 @@
                                               </div>
 
                    </div>
-                   {%  if team.admin == us %}
+                   
                
                </div>
+               {%  if team.admin == us %}
                <div class="card shadow mb-4" >
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -213,14 +214,23 @@
                                   <i class="fas fa-arrow-right"></i>
                                 </span>
                                 <span class="text">Update Team</span>
-                      </button></div>
+                      </button></div></div>
+                      {%    else    %}
+                      <div class="row">
+                            <div class="col-12 text-right">
+                            <a href="/team/{{   team.url    }}/member/{{    us.username }}/deleteself/" name="update-profile" class="btn btn-danger btn-icon-split">
+                                      <span class="icon text-white-50">
+                                        <i class="fas fa-arrow-right"></i>
+                                      </span>
+                                      <span class="text">Exit from Team</span>
+                                    </a></div></div>
+          
                       {%  endif %}
-
-                    </div>
-
+                     
             </div>
-
+           
           </div>
+          
         </div>
         
 

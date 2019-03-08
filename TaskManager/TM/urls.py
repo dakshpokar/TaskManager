@@ -21,5 +21,7 @@ urlpatterns = [
     url(r'^team\/[a-zA-Z0-9]+\/tasks\/[a-zA-Z0-9]+\/delete\/$', DeleteTasks.as_view(), name="delete"),
     url(r'^team\/[a-zA-Z0-9]+\/tasks\/[a-zA-Z0-9]+\/$', SpecificTaskView.as_view(), name="specific-task"),
     url(r'^team\/[a-zA-Z0-9]+\/member\/[a-zA-Z0-9]+\/delete\/$', DeleteTeamMember.as_view(), name="members"),
+    url(r'^team\/[a-zA-Z0-9]+\/member\/[a-zA-Z0-9]+\/deleteself\/$', DeleteTeamMember.as_view(), name="members"),
+
 
 ]
