@@ -120,7 +120,7 @@
                           <div class="card-body">
                                   <div class="table-responsive">
                                     {%  if joined_teams.all.count == 1  %}
-                                        {%  if jt.admin != user %}
+                                        {%  if jt.admin != us %}
                                         
                                         <table class="table table-bordered" id="dataTable1" width="100%" cellspacing="0">
                                             <thead>
@@ -141,7 +141,7 @@
                                                     </tfoot>
                                                     <tbody>
                                                             {%    for i in joined_teams.all  %}
-                                                            {%  if i.team.admin != user %}
+                                                            {%  if i.team.admin != us %}
                                                         <tr>
                                                             <td><a href="/team/{{ i.team.url }}/dashboard/">{{  i.team.name   }}</a></td>
                                                             <td>{{  i.team.url   }}</td>
@@ -176,7 +176,7 @@
                                                   </tfoot>
                                                   <tbody>
                                                           {%    for i in joined_teams.all  %}
-                                                          {%  if i.team.admin != user %}
+                                                          {%  if i.team.admin != us %}
                                                       <tr>
                                                           <td><a href="/team/{{ i.team.url }}/dashboard/">{{  i.team.name   }}</a></td>
                                                           <td>{{  i.team.url   }}</td>

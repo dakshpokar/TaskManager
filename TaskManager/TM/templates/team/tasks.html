@@ -96,7 +96,7 @@
                                   <tbody>
                                       {%  for i in tasks.all  %}
                                     <tr>
-                                      <td>{{ i.title }}</td>
+                                      <td><a href="/team/{{ team.url }}/tasks/{{ i.url }}/">{{ i.title }}</a></td>
                                       <td id="des"><input type="hidden" id="desc" value="{{ i.desc }}" />{{ i.desc }}
                                         <script type="text/javascript">
                                           var deg = 0

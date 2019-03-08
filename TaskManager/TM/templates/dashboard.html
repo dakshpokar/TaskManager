@@ -53,9 +53,12 @@
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
           </div>
+          
           <div class="row">
+          
             <div class="col-4 h-100">
-                <div class="px-3 h-100 py-5 bg-gradient-primary text-white text-center" >
+          <a href="/create-team" style="text-decoration: none">
+              <div class="px-3 h-100 py-5 bg-gradient-primary text-white text-center" >
                   <h2>Create Team</h2>
                   <div class="row" style="margin-bottom: -40px">
                       <div class="col-12 text-right ">
@@ -63,9 +66,11 @@
                       </div>
                     </div>
                 </div>
-                
+
+              </a>
             </div>
             <div class="col-4">
+                <a href="/teams/" style="text-decoration: none">
                 <div class="px-3 py-5 bg-gradient-success text-white text-center" >
                     <h2>Manage Teams</h2>
                     <div class="row" style="margin-bottom: -40px">
@@ -74,8 +79,10 @@
                         </div>
                       </div>
                   </div>
+                  </a>
             </div>
             <div class="col-4">
+                <a href="/settings/" style="text-decoration: none">
                 <div class="px-3 py-5 bg-gradient-danger text-white text-center" >
                     <h2>Settings</h2>
                     <div class="row" style="margin-bottom: -40px">
@@ -84,8 +91,161 @@
                         </div>
                       </div>
                   </div>
+                  </a>
             </div>
-          </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-6">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Your Teams</h6>
+                 
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                        <div class="card-body">
+                                <div class="table-responsive">
+                                  {%  if teams.all.count != 0 %}
+                                  <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                                <tr>
+                                                  <th>Name</th>
+                                                  <th>URL</th>
+                                                  <th>Members</th>
+                                                  <th>Options</th>
+                                                </tr>
+                                              </thead>
+                                              <tfoot>
+                                                    <tr>
+                                                      <th>Name</th>
+                                                      <th>URL</th>
+                                                      <th>Members</th>
+                                                      <th>Options</th>
+                                                    </tr>
+                                                </tfoot>
+                                                <tbody>
+                                                        {%    for i in teams.all  %}
+                                                    <tr>
+                                                        <td><a href="/team/{{ i.url }}/dashboard/">{{  i.name   }}</a></td>
+                                                        <td>{{  i.url   }}</td>
+                                                        <td>{{  i.members.count }}</td>
+                                                        <td><a href="/team/{{ i.url }}/dashboard/"><i class="fas fa-external-link-alt"></i></a><a href="/team/{{ i.url }}/settings/" style="margin-left: 10px"><i class="fas fa-cog"></i></a><a href="/team/{{ i.url }}/delete/" style="margin-left: 10px"><i class="fas fa-trash"></i></a></td>
+                                                        
+                                                    </tr>
+                                                    {%  endfor  %}
+                                                </tbody>
+                                                </table>
+                                                {%  else  %}
+                                                <div align="center">There are no teams you are admin of!</div>
+                                                {%  endif %}
+                                                </div>
+                                              </div>
+                                              <div class="row">
+                                                <div class="col-12 text-right">
+                                                  <a style="text-decoration: none" href="/teams/">View all <i class="fas fa-arrow-right"></i></a>
+                                                </div>
+                                                </div>
+                </div>
+              </div>
+             
+        </div>
+        <div class="col-6">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Joined Teams</h6>
+                 
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                        <div class="card-body">
+                                <div class="table-responsive">
+                                  {%  if joined_teams.all.count == 1  %}
+                                      {%  if jt.admin != us %}
+                                      
+                                      <table class="table table-bordered" id="dataTable1" width="100%" cellspacing="0">
+                                          <thead>
+                                                  <tr>
+                                                    <th>Name</th>
+                                                    <th>URL</th>
+                                                    <th>Members</th>
+                                                    <th>Options</th>
+                                                  </tr>
+                                                </thead>
+                                                <tfoot>
+                                                      <tr>
+                                                        <th>Name</th>
+                                                        <th>URL</th>
+                                                        <th>Members</th>
+                                                        <th>Options</th>
+                                                      </tr>
+                                                  </tfoot>
+                                                  <tbody>
+                                                          {%    for i in joined_teams.all  %}
+                                                          {%  if i.team.admin != us %}
+                                                      <tr>
+                                                          <td><a href="/team/{{ i.team.url }}/dashboard/">{{  i.team.name   }}</a></td>
+                                                          <td>{{  i.team.url   }}</td>
+                                                          <td>{{  i.team.members.count }}</td>
+                                                          <td><a href="/team/{{ i.team.url }}/dashboard/"><i class="fas fa-external-link-alt"></i></a></td>
+                                                          
+                                                      </tr>
+                                                        {%  endif %}
+                                                      {%  endfor  %}
+                                                  </tbody>
+                                                  </table>
+                                      {%  else  %}
+                                        <div align="center">There are no teams you have joined!</div>
+                                      {%  endif %}
+                                  {%  elif joined_teams.all.count != 0 %}
+                                  <table class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
+                                        <thead>
+                                                <tr>
+                                                  <th>Name</th>
+                                                  <th>URL</th>
+                                                  <th>Members</th>
+                                                  <th>Options</th>
+                                                </tr>
+                                              </thead>
+                                              <tfoot>
+                                                    <tr>
+                                                      <th>Name</th>
+                                                      <th>URL</th>
+                                                      <th>Members</th>
+                                                      <th>Options</th>
+                                                    </tr>
+                                                </tfoot>
+                                                <tbody>
+                                                        {%    for i in joined_teams.all  %}
+                                                        {%  if i.team.admin != us %}
+                                                    <tr>
+                                                        <td><a href="/team/{{ i.team.url }}/dashboard/">{{  i.team.name   }}</a></td>
+                                                        <td>{{  i.team.url   }}</td>
+                                                        <td>{{  i.team.members.count }}</td>
+                                                        <td><a href="/team/{{ i.team.url }}/dashboard/"><i class="fas fa-external-link-alt"></i></a></td>
+                                                        
+                                                    </tr>
+                                                      {%  endif %}
+                                                    {%  endfor  %}
+                                                </tbody>
+                                                </table>
+                                                {%  else  %}
+                                                <div align="center">There are no teams you have joined!</div>
+                                                {%  endif %}
+                                                </div>
+                                              </div>
+                                              <div class="row">
+                                                  <div class="col-12 text-right">
+                                                    <a style="text-decoration: none" href="/teams/">View all <i class="fas fa-arrow-right"></i></a>
+                                                  </div>
+                                                  </div>
+                </div>
+              </div>
+       
+      </div>
+</div>
+
         </div>
         <!-- /.container-fluid -->
 

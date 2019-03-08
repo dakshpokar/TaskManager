@@ -63,7 +63,14 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     def get(self, request):
         user = request.user
         us = UserProfile.objects.get(user=user)
-        return render(request, self.template_name, {'us': us, 'user': user})
+        teams = Teams.objects.filter(admin=us)
+        joined_teams = Membership.objects.filter(member=UserProfile.objects.get(user=user))
+        jt = None
+        if joined_teams.all().count() == 1:
+            jt = joined_teams.all()[0].team
+        teams = teams[:5]
+        joined_teams = joined_teams[:5]
+        return render(request, self.template_name, {'teams': teams, 'us': us, 'user': user, 'joined_teams': joined_teams, 'jt': jt})
     def post(self, request):
         return
 
@@ -124,9 +131,11 @@ class SpecificTeamView(LoginRequiredMixin, TemplateView):
         user = request.user
         us = UserProfile.objects.get(user=user)
         team = Teams.objects.get(url=request.path.split("/")[2])
+        tasks = Task.objects.filter(belongs_to=team)
+        tasks = tasks[:5]
         if us not in team.members.all():
             return redirect("/")
-        return render(request, self.template_name, {'user': user, 'us': us, 'team': team})
+        return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'tasks': tasks})
     def post(self, request):
         return
 
