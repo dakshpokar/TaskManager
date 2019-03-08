@@ -170,10 +170,12 @@ class SettingsView(LoginRequiredMixin, TemplateView):
             if form.is_valid():
                 for key, value in request.POST.items():
                     post[key] = value
-                x = UserProfile.objects.filter(username=post["username"])
-                if x.count() > 0:
-                    return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'error': True, 'error_msg': "Username already exists!"})
+                if us.username != post["username"]:
+                    x = UserProfile.objects.filter(username=post["username"])
+                    if x.count() > 0:
+                        return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'error': True, 'error_msg': "Username already exists!"})
                 us.profile_picture = form.cleaned_data["profile_picture"]
+                print(us.profile_picture)
                 us.first_name = post["first_name"]
                 us.last_name = post["last_name"]
                 us.username = post["username"]
