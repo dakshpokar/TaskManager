@@ -384,7 +384,14 @@ class SpecificTaskView(LoginRequiredMixin, TemplateView):
 
 class DeleteTeamMember(LoginRequiredMixin, TemplateView):
     login_url='/../login'
+    template_name="team/settings.html"
     def get(self, request):
-        return
-    def post(self, request):
-        return
+        user = request.user
+        us = UserProfile.objects.get(user=user)
+        team = Teams.objects.get(url=request.path.split("/")[2])
+        del_user = UserProfile.objects.get(username=request.path.split("/")[4])
+        if team.admin == us:
+            Membership.objects.filter(member=del_user).delete()
+            return redirect("../../../settings/")
+        else:
+            return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'error': True, 'error_msg': "You are not admin!"})

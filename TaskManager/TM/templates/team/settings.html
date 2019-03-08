@@ -172,7 +172,7 @@
                                                             <td style="width: 7%; text-align: center;"><img class="img-profile rounded-circle" style="height: 30px" src="{{ MEDIA_ROOT }}{{ i.profile_picture.url }}"></td>
                                                             <td style="width: 78%"><h4>{{  i.user.first_name    }} {{   i.user.last_name }} </h4></td>
                                                             {%  if team.admin == us %}
-                                                            <td><a href="/team/{{   team.url    }}/members/{{ i.username }}/delete/" style="margin-left: 10px"><i class="fas fa-trash"></i></a></td>
+                                                            <td><a href="/team/{{   team.url    }}/member/{{ i.username }}/delete/" style="margin-left: 10px"><i class="fas fa-trash"></i></a></td>
                                                             {%  endif %}
 
                                                         </tr>
