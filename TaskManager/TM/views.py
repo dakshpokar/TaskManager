@@ -91,7 +91,7 @@ class CreateTeamView(LoginRequiredMixin, TemplateView):
             if form.is_valid():
                 name = form.cleaned_data["name"]
                 tea = Teams.objects.create(name=name, admin=us)
-                tea.url = tea.name.lower() + str(tea.id)
+                tea.url = tea.name.lower().replace(" ", "") + str(tea.id)
                 tea.save()
                 m = Membership(member=us, team=tea)
                 m.save()
@@ -228,7 +228,7 @@ class CreateTaskView(LoginRequiredMixin, TemplateView):
                 task.status = STATUS[post["status"]]
                 task.url = str(task.id)
                 task.save()
-                m = MembershipToTask(member=UserProfile.objects.get(user=user), task=task, team=team)
+                m = MembershipToTask(member=team.admin, task=task, team=team)
                 m.save()
                 for i in usery:
                     mem = UserProfile.objects.get(user=User.objects.get(id = i))
