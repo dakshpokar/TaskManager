@@ -418,3 +418,18 @@ class DeleteTeamMember(LoginRequiredMixin, TemplateView):
             return redirect("/teams")
         else:
             return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'error': True, 'error_msg': "You are not admin!", 'notifications': get_notifications(us, 1)})
+
+class TaskSettings(LoginRequiredMixin, TemplateView):
+    template_name="team/task-settings.html"
+    login_url='/../login'
+    def get(self, request):
+        user=request.user
+        us = UserProfile.objects.get(user=user)
+        team = Teams.objects.get(url=request.path.split("/")[2])
+        tasks = Task.objects.get(url=request.path.split("/")[4])
+        if(tasks.created_by == us):     
+            return render(request, self.template_name)
+        else:
+            return redirect("/")
+    def post(self, request):
+        return
