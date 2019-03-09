@@ -57,6 +57,9 @@ class RegisterView(TemplateView):
                 return redirect('../')
 
 
+def get_notifications(user, unread):
+    return MessageNotification.objects.filter(user=user, unread = unread)
+    
 class DashboardView(LoginRequiredMixin, TemplateView):
     login_url = '/../login/'
     template_name = "dashboard.html"
@@ -70,10 +73,9 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             jt = joined_teams.all()[0].team
         teams = teams[:5]
         joined_teams = joined_teams[:5]
-        return render(request, self.template_name, {'teams': teams, 'us': us, 'user': user, 'joined_teams': joined_teams, 'jt': jt})
+        return render(request, self.template_name, {'teams': teams, 'us': us, 'user': user, 'joined_teams': joined_teams, 'jt': jt, 'notifications': get_notifications(us, 1)})
     def post(self, request):
         return
-
 
 class CreateTeamView(LoginRequiredMixin, TemplateView):
     login_url = '/../login/'
@@ -82,7 +84,7 @@ class CreateTeamView(LoginRequiredMixin, TemplateView):
         form = CreateTeamForm()
         user = request.user
         us = UserProfile.objects.get(user=user)
-        return render(request, self.template_name, {'form': form, 'us': us, 'user': user, 'error': False})
+        return render(request, self.template_name, {'form': form, 'us': us, 'user': user, 'error': False, 'notifications': get_notifications(us, 1)})
     def post(self, request):
         user = request.user
         us = UserProfile.objects.get(user=user)
@@ -104,7 +106,7 @@ class CreateTeamView(LoginRequiredMixin, TemplateView):
                                 m.save()
                         except User.DoesNotExist:
                             Teams.objects.filter(id=tea.id).delete()
-                            return render(request, self.template_name, {'form': form, 'us': us, 'user': user, 'error': True, 'error_msg': "User Does not exist: " + str(value)})
+                            return render(request, self.template_name, {'form': form, 'us': us, 'user': user, 'error': True, 'error_msg': "User Does not exist: " + str(value), 'notifications': get_notifications(us, 1)})
                             
                 return redirect("/teams/")
 
@@ -120,7 +122,7 @@ class TeamView(LoginRequiredMixin, TemplateView):
         jt = None
         if joined_teams.all().count() == 1:
             jt = joined_teams.all()[0].team
-        return render(request, self.template_name, {'teams': teams, 'us': us, 'user': user, 'joined_teams': joined_teams, 'jt': jt})
+        return render(request, self.template_name, {'teams': teams, 'us': us, 'user': user, 'joined_teams': joined_teams, 'jt': jt, 'notifications': get_notifications(us, 1)})
     def post(self, request):
         return
 
@@ -135,7 +137,7 @@ class SpecificTeamView(LoginRequiredMixin, TemplateView):
         tasks = tasks[:5]
         if us not in team.members.all():
             return redirect("/")
-        return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'tasks': tasks})
+        return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'tasks': tasks, 'notifications': get_notifications(us, 1)})
     def post(self, request):
         return
 
@@ -156,7 +158,7 @@ class ProfileView(TemplateView):
                 log = request.user.is_authenticated
             else:
                 log = False
-            return render(request, self.template_name, {'user': user, 'us': us, 'logged_in': log})
+            return render(request, self.template_name, {'user': user, 'us': us, 'logged_in': log, 'notifications': get_notifications(us, 1)})
         else:
             return render(request, self.templ_404)
         return
@@ -169,7 +171,7 @@ class SettingsView(LoginRequiredMixin, TemplateView):
         user = request.user
         us = UserProfile.objects.get(user=user)
         form = UpdateProfileForm()
-        return render(request, self.template_name, {'user': user, 'us': us, 'form': form})
+        return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'notifications': get_notifications(us, 1)})
     def post(self, request):
         user = request.user
         us = UserProfile.objects.get(user=user)
@@ -182,7 +184,7 @@ class SettingsView(LoginRequiredMixin, TemplateView):
                 if us.username != post["username"]:
                     x = UserProfile.objects.filter(username=post["username"])
                     if x.count() > 0:
-                        return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'error': True, 'error_msg': "Username already exists!"})
+                        return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'error': True, 'error_msg': "Username already exists!", 'notifications': get_notifications(us, 1)})
                 us.profile_picture = form.cleaned_data["profile_picture"]
                 print(us.profile_picture)
                 us.first_name = post["first_name"]
@@ -190,9 +192,9 @@ class SettingsView(LoginRequiredMixin, TemplateView):
                 us.username = post["username"]
                 us.save()
                 form = UpdateProfileForm()
-                return render(request, self.template_name, {'user': user, 'us': us, 'form': form})
+                return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'notifications': get_notifications(us, 1)})
             else:
-                return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'error': True, 'error_msg': "Invalid Information!"})
+                return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'error': True, 'error_msg': "Invalid Information!", 'notifications': get_notifications(us, 1)})
 
 STATUS = {
     'planned': 0,
@@ -207,7 +209,7 @@ class CreateTaskView(LoginRequiredMixin, TemplateView):
         us = UserProfile.objects.get(user=user)
         team = Teams.objects.get(url=request.path.split("/")[2])
         form = CreateTaskForm()
-        return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'form':  form})
+        return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'form':  form, 'notifications': get_notifications(us, 1)})
     def post(self, request):
         form = CreateTaskForm(request.POST)
         user = request.user
@@ -236,7 +238,7 @@ class CreateTaskView(LoginRequiredMixin, TemplateView):
                     m.save()
                 return redirect("../tasks/")
             else:
-                return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'form':  form, 'error': True, 'error_msg': "Entered Information is Invalid"})
+                return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'form':  form, 'notifications': get_notifications(us, 1), 'error': True, 'error_msg': "Entered Information is Invalid"})
 
 
 class TasksView(LoginRequiredMixin, TemplateView):
@@ -250,7 +252,7 @@ class TasksView(LoginRequiredMixin, TemplateView):
         assigned_tasks = MembershipToTask.objects.filter(member=us, team=team)
         if us not in team.members.all():
             return redirect("/")
-        return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'tasks': tasks, 'ass_tasks': assigned_tasks})
+        return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'tasks': tasks, 'ass_tasks': assigned_tasks, 'notifications': get_notifications(us, 1)})
     def post(self, request):
         return
 
@@ -263,7 +265,7 @@ class MembersView(LoginRequiredMixin, TemplateView):
         team = Teams.objects.get(url=request.path.split("/")[2])
         if us not in team.members.all():
             return redirect("/")
-        return render(request, self.template_name, {'user': user, 'us': us, 'team': team})
+        return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'notifications': get_notifications(us, 1)})
     def post(self, request):
         return
 
@@ -276,7 +278,7 @@ class TeamSettingsView(LoginRequiredMixin, TemplateView):
         team = Teams.objects.get(url=request.path.split("/")[2])
         if us not in team.members.all():
             return redirect("/")
-        return render(request, self.template_name, {'user': user, 'us': us, 'team': team})
+        return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'notifications': get_notifications(us, 1)})
     def post(self, request):
         user = request.user
         us = UserProfile.objects.get(user=user)
@@ -293,11 +295,11 @@ class TeamSettingsView(LoginRequiredMixin, TemplateView):
                         m = Membership(member=mem, team=team)
                         m.save()
                 except User.DoesNotExist:
-                    return render(request, self.template_name, {'form': form, 'us': us, 'user': user, 'error': True, 'error_msg': "User Does not exist: " + str(value)})  
+                    return render(request, self.template_name, {'form': form, 'us': us, 'user': user, 'error': True, 'error_msg': "User Does not exist: " + str(value), 'notifications': get_notifications(us, 1)})  
         team.name = x["name"]
         team.url = x["url"]
         team.save()  
-        return render(request, self.template_name, {'user': user, 'us': us, 'team': team})
+        return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'notifications': get_notifications(us, 1)})
 
 class DeleteTeam(LoginRequiredMixin, TemplateView):
     template_name="team/delete.html"
@@ -309,7 +311,7 @@ class DeleteTeam(LoginRequiredMixin, TemplateView):
         form = LoginForm()
         if us not in team.members.all():
             return redirect("/")
-        return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team})
+        return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'notifications': get_notifications(us, 1)})
     def post(self, request):
         user = request.user
         us = UserProfile.objects.get(user=user)
@@ -328,9 +330,9 @@ class DeleteTeam(LoginRequiredMixin, TemplateView):
                         team.delete()
                         return redirect("/")
                     else:
-                        return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'error': True, 'error_msg': "You are not allowed to do that!"})
+                        return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'notifications': get_notifications(us, 1), 'team': team, 'error': True, 'error_msg': "You are not allowed to do that!"})
                 else:
-                    return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'error': True, 'error_msg': "Wrong Credentials"})
+                    return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'error': True, 'error_msg': "Wrong Credentials", 'notifications': get_notifications(us, 1)})
 
 class DeleteTasks(LoginRequiredMixin, TemplateView):
     template_name="team/delete-tasks.html"
@@ -343,7 +345,7 @@ class DeleteTasks(LoginRequiredMixin, TemplateView):
         form = LoginForm()
         if us not in team.members.all():
             return redirect("/")
-        return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks})
+        return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks, 'notifications': get_notifications(us, 1)})
     def post(self, request):
         user = request.user
         us = UserProfile.objects.get(user=user)
@@ -359,7 +361,7 @@ class DeleteTasks(LoginRequiredMixin, TemplateView):
                     tasks.delete()
                     return redirect("../../")
                 else:
-                    return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks, 'error': True, 'error_msg': "Wrong Credentials"})
+                    return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'notifications': get_notifications(us, 1), 'tasks': tasks, 'error': True, 'error_msg': "Wrong Credentials"})
 
 
 class SpecificTaskView(LoginRequiredMixin, TemplateView):
@@ -371,10 +373,14 @@ class SpecificTaskView(LoginRequiredMixin, TemplateView):
         team = Teams.objects.get(url=request.path.split("/")[2])
         tasks = Task.objects.get(url=request.path.split("/")[4])
         comments = Comments.objects.filter(task=tasks)
+        notification = MessageNotification.objects.filter(user=us)
+        for i in notification.all():
+            i.unread = 0
+            i.save()
         form = CommentsForm()
         if us not in team.members.all():
             return redirect("/")
-        return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks, 'comments': comments})
+        return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks, 'comments': comments, 'notifications': get_notifications(us, 1)})
     def post(self, request):
         user = request.user
         us = UserProfile.objects.get(user=user)
@@ -387,10 +393,14 @@ class SpecificTaskView(LoginRequiredMixin, TemplateView):
                 message = form.cleaned_data["message"]
                 comment = Comments.objects.create(task=tasks, user=UserProfile.objects.get(user=user), message=message)
                 comment.save()
+                for i in team.members.all():
+                    if(i!=us):
+                        notif = MessageNotification.objects.create(user=i, comment=comment, unread=1)
+                        notif.save()
                 form = CommentsForm()
-                return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks, 'comments': comments})
+                return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks, 'comments': comments, 'notifications': get_notifications(us, 1)})
             else:
-                return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks, 'comments': comments, 'error': True, 'error-msg': "Error in Commenting"})
+                return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks, 'comments': comments, 'notifications': get_notifications(us, 1), 'error': True, 'error-msg': "Error in Commenting"})
 
 class DeleteTeamMember(LoginRequiredMixin, TemplateView):
     login_url='/../login'
@@ -407,4 +417,4 @@ class DeleteTeamMember(LoginRequiredMixin, TemplateView):
             Membership.objects.filter(member=del_user).delete()
             return redirect("/teams")
         else:
-            return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'error': True, 'error_msg': "You are not admin!"})
+            return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'error': True, 'error_msg': "You are not admin!", 'notifications': get_notifications(us, 1)})
