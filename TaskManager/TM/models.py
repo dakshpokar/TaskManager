@@ -45,3 +45,8 @@ class Comments(models.Model):
     message = models.TextField()
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+
+
+class Notification(models.Model):
+    id = models.AutoField(primary_key=True)
+    
