@@ -51,4 +51,5 @@ class MessageNotification(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     comment = models.ForeignKey(Comments, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
     unread = models.IntegerField()

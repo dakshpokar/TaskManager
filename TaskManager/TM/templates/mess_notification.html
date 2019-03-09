@@ -16,7 +16,7 @@
                   </div>
                   <div class="font-weight-bold">
                     <div class="text-truncate">{{ i.comment.message }}</div>
-                    <div class="small text-gray-500">{{ i.comment.user.user.first_name }} {{ i.comment.user.user.last_name }}</div>
+                    <div class="small text-gray-500">{{ i.comment.user.user.first_name }} {{ i.comment.user.user.last_name }}<br>{{  i.comment.task.belongs_to.name }} - {{  i.comment.task.title }}</div>
                   </div>
                 </a>
                {% endfor %}

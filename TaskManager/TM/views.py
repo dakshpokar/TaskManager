@@ -58,7 +58,7 @@ class RegisterView(TemplateView):
 
 
 def get_notifications(user, unread):
-    return MessageNotification.objects.filter(user=user, unread = unread)
+    return MessageNotification.objects.filter(user=user, unread = unread)[:5]
     
 class DashboardView(LoginRequiredMixin, TemplateView):
     login_url = '/../login/'
@@ -373,7 +373,7 @@ class SpecificTaskView(LoginRequiredMixin, TemplateView):
         team = Teams.objects.get(url=request.path.split("/")[2])
         tasks = Task.objects.get(url=request.path.split("/")[4])
         comments = Comments.objects.filter(task=tasks)
-        notification = MessageNotification.objects.filter(user=us)
+        notification = MessageNotification.objects.filter(user=us, task=tasks)
         for i in notification.all():
             i.unread = 0
             i.save()
@@ -395,7 +395,7 @@ class SpecificTaskView(LoginRequiredMixin, TemplateView):
                 comment.save()
                 for i in team.members.all():
                     if(i!=us):
-                        notif = MessageNotification.objects.create(user=i, comment=comment, unread=1)
+                        notif = MessageNotification.objects.create(user=i, comment=comment, task=tasks, unread=1)
                         notif.save()
                 form = CommentsForm()
                 return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'tasks': tasks, 'comments': comments, 'notifications': get_notifications(us, 1)})
