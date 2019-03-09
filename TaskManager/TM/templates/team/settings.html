@@ -172,7 +172,13 @@
                                                             <td style="width: 7%; text-align: center;"><img class="img-profile rounded-circle" style="height: 30px" src="{{ MEDIA_ROOT }}{{ i.profile_picture.url }}"></td>
                                                             <td style="width: 78%"><h4>{{  i.user.first_name    }} {{   i.user.last_name }} </h4></td>
                                                             {%  if team.admin == us %}
-                                                            <td><a href="/team/{{   team.url    }}/member/{{ i.username }}/delete/" style="margin-left: 10px"><i class="fas fa-trash"></i></a></td>
+                                                            <td>
+                                                                {%  if i != us %}
+                                                                <a href="/team/{{   team.url    }}/member/{{ i.username }}/delete/" style="margin-left: 10px">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </a>
+                                                                {%  endif %}
+                                                            </td>
                                                             {%  endif %}
 
                                                         </tr>
@@ -209,6 +215,12 @@
                </div>
                    <div class="row">
                       <div class="col-12 text-right">
+                            <a href="/team/{{   team.url    }}/delete" name="update-profile" class="btn btn-danger btn-icon-split">
+                                <span class="icon text-white-50">
+                                  <i class="fas fa-arrow-right"></i>
+                                </span>
+                                <span class="text">Delete Team</span>
+                              </a>
                       <button name="update-profile" class="btn btn-primary btn-icon-split">
                                 <span class="icon text-white-50">
                                   <i class="fas fa-arrow-right"></i>

@@ -226,13 +226,13 @@ class CreateTaskView(LoginRequiredMixin, TemplateView):
                 task.title = post["title"]
                 task.desc = post["desc"]
                 task.status = STATUS[post["status"]]
-                task.url = task.title.lower() + str(task.id)
+                task.url = str(task.id)
                 task.save()
-                m = MembershipToTask(member=UserProfile.objects.get(user=user), task=task)
+                m = MembershipToTask(member=UserProfile.objects.get(user=user), task=task, team=team)
                 m.save()
                 for i in usery:
                     mem = UserProfile.objects.get(user=User.objects.get(id = i))
-                    m = MembershipToTask(member=mem, task=task)
+                    m = MembershipToTask(member=mem, task=task, team=team)
                     m.save()
                 return redirect("../tasks/")
             else:
@@ -247,9 +247,10 @@ class TasksView(LoginRequiredMixin, TemplateView):
         us = UserProfile.objects.get(user=user)
         team = Teams.objects.get(url=request.path.split("/")[2])
         tasks = Task.objects.filter(belongs_to=team)
+        assigned_tasks = MembershipToTask.objects.filter(member=us, team=team)
         if us not in team.members.all():
             return redirect("/")
-        return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'tasks': tasks})
+        return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'tasks': tasks, 'ass_tasks': assigned_tasks})
     def post(self, request):
         return
 

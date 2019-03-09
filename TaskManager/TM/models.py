@@ -33,7 +33,7 @@ class Task(models.Model):
 class MembershipToTask(models.Model):
     member = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
-
+    team = models.ForeignKey(Teams, on_delete=models.CASCADE)
 
 class Membership(models.Model):
     member = models.ForeignKey(UserProfile, on_delete=models.CASCADE)

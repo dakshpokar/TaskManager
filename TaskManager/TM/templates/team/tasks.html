@@ -64,7 +64,7 @@
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Tasks ({{tasks.all.count}})</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">All Tasks ({{tasks.all.count}})</h6>
                   
                 </div>
                 <!-- Card Body -->
@@ -75,7 +75,6 @@
                                   <thead>
                                     <tr>
                                       <th>Title</th>
-                                      <th>Description</th>
                                       <th>Date Created</th>
                                       <th>Assigned Members</th>
                                       <th>Status</th>
@@ -85,7 +84,6 @@
                                   <tfoot>
                                     <tr>
                                         <th>Title</th>
-                                        <th>Description</th>
                                         <th>Date Created</th>
                                         <th>Assigned Members</th>
                                         <th>Status</th>
@@ -97,14 +95,6 @@
                                       {%  for i in tasks.all  %}
                                     <tr>
                                       <td><a href="/team/{{ team.url }}/tasks/{{ i.url }}/">{{ i.title }}</a></td>
-                                      <td id="des"><input type="hidden" id="desc" value="{{ i.desc }}" />{{ i.desc }}
-                                        <script type="text/javascript">
-                                          var deg = 0
-                                            var dis = document.getElementById("desc").value
-                                            var d = document.getElementById("des")
-                                            dis = dis.replace(/<img[^>]*>/g,"");
-                                            d.innerHTML = dis
-                                          </script></td>
                                       <td>{{ i.date_created }}</td>
                                       <td>
                                         {%  for j in i.assigned_members.all  %}
@@ -115,8 +105,7 @@
                                         {%  if i.status == 0  %}Planned{%  elif i.status == 1  %}In Progress{%  elif i.status == 2  %}Done{%  endif %}
                                       </td>
                                       <td>
-                                        <a href="/team/{{ team.url }}/tasks/{{ i.url }}/"><i class="fas fa-external-link-alt"></i></a>
-                                        <a href="/team/{{ team.url }}/tasks/{{ i.url }}/delete/" style="margin-left: 10px"><i class="fas fa-trash"></i></a>
+                                        <a href="/team/{{ team.url }}/tasks/{{ i.url }}/"><i class="fas fa-external-link-alt"></i></a>{%  if i.created_by == us %}<a class="ml-2" href="/team/{{ team.url }}/tasks/{{ i.url }}/settings/"><i class="fas fa-cog"></i></a>{%  endif %}<a class="ml-2" href="/team/{{ team.url }}/tasks/{{ i.url }}/delete/" style="margin-left: 10px"><i class="fas fa-trash"></i></a>
                                       </td>
                                                         
                                     </tr>
@@ -129,6 +118,66 @@
                                 </div>
                 </div>
               </div>
+
+              <div class="card shadow mb-4">
+                  <!-- Card Header - Dropdown -->
+                  <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Assigned Tasks</h6>
+                    
+                  </div>
+                  <!-- Card Body -->
+                  <div class="card-body">
+                          <div class="card-body">
+                              <div class="table-responsive">
+                                  <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                      <tr>
+                                        <th>Title</th>
+                                        <th>Date Created</th>
+                                        <th>Assigned Members</th>
+                                        <th>Status</th>
+                                        <th>Options</th>
+                                      </tr>
+                                    </thead>
+                                    <tfoot>
+                                      <tr>
+                                          <th>Title</th>
+                                          <th>Date Created</th>
+                                          <th>Assigned Members</th>
+                                          <th>Status</th>
+                                          <th>Options</th>
+  
+                                      </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        {%  for i in ass_tasks.all  %}
+                                      <tr>
+                                        <td><a href="/team/{{ team.url }}/tasks/{{ i.url }}/">{{ i.task.title }}</a></td>
+                                        <td>{{ i.task.date_created }}</td>
+                                        <td>
+                                          {%  for j in i.task.assigned_members.all  %}
+                                            {{  j.user.first_name  }} {{ j.user.last_name }}<br>
+                                          {%  endfor  %}
+                                        </td>
+                                        <td>
+                                          {%  if i.task.status == 0  %}Planned{%  elif i.task.status == 1  %}In Progress{%  elif i.task.status == 2  %}Done{%  endif %}
+                                        </td>
+                                        <td>
+                                          <a href="/team/{{ team.url }}/tasks/{{ i.task.url }}/"><i class="fas fa-external-link-alt"></i></a>
+                                          <a class="ml-2" href="/team/{{ team.url }}/tasks/{{ i.task.url }}/delete/" style="margin-left: 10px"><i class="fas fa-trash"></i></a>
+                                        </td>
+                                                          
+                                      </tr>
+                                      {%  endfor %}
+  
+                                    </tbody>
+                                  </table>
+                                </div>
+  
+                                  </div>
+                  </div>
+                </div>
+
             </div>
 
             <div class="col-xl-2"></div>
