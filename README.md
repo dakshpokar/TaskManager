@@ -19,4 +19,4 @@ packages.
 4. Server will be initialized at http://127.0.0.1:8080
 
 # Documentation
-Detailed documentation with test cases is available in Documentation.pdf file location in the main directory or click here[https://github.com/dakshpokar/fsf_2019_screening_task1/blob/master/Documentation.pdf].
+Detailed documentation with test cases is available in Documentation.pdf file location in the main directory or [click here](https://github.com/dakshpokar/fsf_2019_screening_task1/blob/master/Documentation.pdf)
