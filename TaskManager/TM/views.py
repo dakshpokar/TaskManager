@@ -93,7 +93,7 @@ class CreateTeamView(LoginRequiredMixin, TemplateView):
             if form.is_valid():
                 name = form.cleaned_data["name"]
                 tea = Teams.objects.create(name=name, admin=us)
-                tea.url = tea.name.lower().replace(" ", "") + str(tea.id)
+                tea.url = str(tea.id)
                 tea.save()
                 m = Membership(member=us, team=tea)
                 m.save()
@@ -324,14 +324,18 @@ class DeleteTeam(LoginRequiredMixin, TemplateView):
                 email_addr = form.cleaned_data["email"]
                 password = form.cleaned_data["password"]
                 user = authenticate(request, username=email_addr, password=password)
-                us = UserProfile.objects.get(user=user)
-                if us is not None:
-                    if us == team.admin:
-                        team.delete()
-                        return redirect("/")
+                try:
+                    us = UserProfile.objects.get(user=user)
+                    if us is not None:
+                        if us == team.admin:
+                            team.delete()
+                            Membership.objects.filter(team=team).delete()
+                            return redirect("/")
+                        else:
+                            return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'notifications': get_notifications(us, 1), 'team': team, 'error': True, 'error_msg': "You are not allowed to do that!"})
                     else:
-                        return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'notifications': get_notifications(us, 1), 'team': team, 'error': True, 'error_msg': "You are not allowed to do that!"})
-                else:
+                        return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'error': True, 'error_msg': "Wrong Credentials", 'notifications': get_notifications(us, 1)})
+                except UserProfile.DoesNotExist:
                     return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'error': True, 'error_msg': "Wrong Credentials", 'notifications': get_notifications(us, 1)})
 
 class DeleteTasks(LoginRequiredMixin, TemplateView):
@@ -357,10 +361,15 @@ class DeleteTasks(LoginRequiredMixin, TemplateView):
                 email_addr = form.cleaned_data["email"]
                 password = form.cleaned_data["password"]
                 user = authenticate(request, username=email_addr, password=password)
-                if user is not None:
-                    tasks.delete()
-                    return redirect("../../")
-                else:
+                try:
+                    us = UserProfile.objects.get(user=user)
+                    if user is not None:
+                        if us == tasks.created_by:
+                            tasks.delete()
+                        return redirect("../../")
+                    else:
+                        return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'notifications': get_notifications(us, 1), 'tasks': tasks, 'error': True, 'error_msg': "Wrong Credentials"})
+                except UserProfile.DoesNotExist:
                     return render(request, self.template_name, {'user': user, 'us': us, 'form': form, 'team': team, 'notifications': get_notifications(us, 1), 'tasks': tasks, 'error': True, 'error_msg': "Wrong Credentials"})
 
 
