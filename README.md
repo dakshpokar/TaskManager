@@ -9,7 +9,6 @@ Task Manager is an web-based django application that allows project managers to 
 4. HTML5
 5. CSS3
 6. Bootstrap 4.2.1
-7. JavaScript
 
 # Setup
 1. Install all the requirements using python package manager or alternatively
