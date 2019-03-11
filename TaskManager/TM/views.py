@@ -64,6 +64,7 @@ class RegisterView(TemplateView):
 def get_notifications(user, unread):
     return MessageNotification.objects.filter(user=user, unread = unread)[:5]
     
+
 class DashboardView(LoginRequiredMixin, TemplateView):
     login_url = '/../login/'
     template_name = "dashboard.html"
@@ -140,11 +141,12 @@ class SpecificTeamView(LoginRequiredMixin, TemplateView):
             team = Teams.objects.get(url=request.path.split("/")[2])
         except Teams.DoesNotExist:
             return render(request, get_404())
+        members = team.members.all()[:3]
         tasks = Task.objects.filter(belongs_to=team)
         tasks = tasks[:5]
         if us not in team.members.all():
             return redirect("/")
-        return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'tasks': tasks, 'notifications': get_notifications(us, 1)})
+        return render(request, self.template_name, {'members':members, 'user': user, 'us': us, 'team': team, 'tasks': tasks, 'notifications': get_notifications(us, 1)})
     def post(self, request):
         return
 
@@ -325,11 +327,14 @@ class TeamSettingsView(LoginRequiredMixin, TemplateView):
             if("member" in key):
                 try:
                     mem = UserProfile.objects.get(user=User.objects.get(username=value))
-                    if mem is not None:
+                    if mem is not None and mem not in team.members.all():
                         m = Membership(member=mem, team=team)
                         m.save()
+                    else:
+                        return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'notifications': get_notifications(us, 1), 'error': True, 'error_msg': "Error Adding Member"})
+
                 except User.DoesNotExist:
-                    return render(request, self.template_name, {'form': form, 'us': us, 'user': user, 'error': True, 'error_msg': "User Does not exist: " + str(value), 'notifications': get_notifications(us, 1)})  
+                    return render(request, self.template_name, {'us': us, 'user': user, 'error': True, 'error_msg': "User Does not exist: " + str(value), 'notifications': get_notifications(us, 1)})  
         team.name = x["name"]
         #team.url = x["url"]
         team.save()  
