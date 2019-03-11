@@ -110,7 +110,7 @@
                                         {%  if i.status == 0  %}Planned{%  elif i.status == 1  %}In Progress{%  elif i.status == 2  %}Done{%  endif %}
                                       </td>
                                       <td>
-                                        <a href="/team/{{ team.url }}/tasks/{{ i.url }}/"><i class="fas fa-external-link-alt"></i></a>{%  if i.created_by == us %}<a class="ml-2" href="/team/{{ team.url }}/tasks/{{ i.url }}/settings/"><i class="fas fa-cog"></i></a>{%  endif %}<a class="ml-2" href="/team/{{ team.url }}/tasks/{{ i.url }}/delete/" style="margin-left: 10px"><i class="fas fa-trash"></i></a>
+                                        <a href="/team/{{ team.url }}/tasks/{{ i.url }}/"><i class="fas fa-external-link-alt"></i></a>{%  if i.created_by == us %}<a class="ml-2" href="/team/{{ team.url }}/tasks/{{ i.url }}/settings/"><i class="fas fa-cog"></i></a>{%  elif us == team.admin %}<a class="ml-2" href="/team/{{ team.url }}/tasks/{{ i.url }}/settings/"><i class="fas fa-cog"></i></a>{%  endif %}{%  if i.created_by == us %}<a class="ml-2" href="/team/{{ team.url }}/tasks/{{ i.url }}/delete/" style="margin-left: 10px"><i class="fas fa-trash"></i></a>{%  elif us == team.admin %}<a class="ml-2" href="/team/{{ team.url }}/tasks/{{ i.url }}/delete/" style="margin-left: 10px"><i class="fas fa-trash"></i></a>{% endif %}
                                       </td>
                                                         
                                     </tr>
@@ -174,7 +174,11 @@
                                         </td>
                                         <td>
                                           <a href="/team/{{ team.url }}/tasks/{{ i.task.url }}/"><i class="fas fa-external-link-alt"></i></a>
+                                          {%  if us == team.admin %}
                                           <a class="ml-2" href="/team/{{ team.url }}/tasks/{{ i.task.url }}/delete/" style="margin-left: 10px"><i class="fas fa-trash"></i></a>
+                                          {%  elif i.task.created_by == us %}
+                                          <a class="ml-2" href="/team/{{ team.url }}/tasks/{{ i.task.url }}/delete/" style="margin-left: 10px"><i class="fas fa-trash"></i></a>
+                                          {% endif %}
                                         </td>
                                                           
                                       </tr>

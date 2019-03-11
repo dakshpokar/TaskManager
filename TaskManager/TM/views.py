@@ -11,6 +11,9 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
+def get_404():
+    return "404.html"
+
 class LoginView(TemplateView):
     template_name = "login.html"
     def get(self, request):
@@ -50,7 +53,8 @@ class RegisterView(TemplateView):
                 user.save()
                 us = UserProfile()
                 us.user=user
-                us.username = first_name.lower() + last_name.lower() + str(user.id)
+                string = first_name.lower() + last_name.lower() + str(user.id)
+                us.username = ''.join(e for e in string if e.isalnum())
                 us.save()
                 return redirect('../login')
             else:
@@ -132,7 +136,10 @@ class SpecificTeamView(LoginRequiredMixin, TemplateView):
     def get(self, request):
         user = request.user
         us = UserProfile.objects.get(user=user)
-        team = Teams.objects.get(url=request.path.split("/")[2])
+        try:
+            team = Teams.objects.get(url=request.path.split("/")[2])
+        except Teams.DoesNotExist:
+            return render(request, get_404())
         tasks = Task.objects.filter(belongs_to=team)
         tasks = tasks[:5]
         if us not in team.members.all():
@@ -207,14 +214,26 @@ class CreateTaskView(LoginRequiredMixin, TemplateView):
     def get(self, request):
         user = request.user
         us = UserProfile.objects.get(user=user)
-        team = Teams.objects.get(url=request.path.split("/")[2])
+        try:
+            team = Teams.objects.get(url=request.path.split("/")[2])
+        except Teams.DoesNotExist:
+            return render(request, get_404())
+        except:
+            return render(request, get_404())        
+        
         form = CreateTaskForm()
         return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'form':  form, 'notifications': get_notifications(us, 1)})
     def post(self, request):
         form = CreateTaskForm(request.POST)
         user = request.user
         us = UserProfile.objects.get(user=user)
-        team = Teams.objects.get(url=request.path.split("/")[2])
+        try:
+            team = Teams.objects.get(url=request.path.split("/")[2])
+        except Teams.DoesNotExist:
+            return render(request, get_404())
+        except:
+            return render(request, get_404())        
+        
         post = {}
         usery = []
         for key, value in request.POST.items():
@@ -230,7 +249,7 @@ class CreateTaskView(LoginRequiredMixin, TemplateView):
                 task.status = STATUS[post["status"]]
                 task.url = str(task.id)
                 task.save()
-                m = MembershipToTask(member=team.admin, task=task, team=team)
+                m = MembershipToTask(member=us, task=task, team=team)
                 m.save()
                 for i in usery:
                     mem = UserProfile.objects.get(user=User.objects.get(id = i))
@@ -247,7 +266,12 @@ class TasksView(LoginRequiredMixin, TemplateView):
     def get(self, request):
         user = request.user
         us = UserProfile.objects.get(user=user)
-        team = Teams.objects.get(url=request.path.split("/")[2])
+        try:
+            team = Teams.objects.get(url=request.path.split("/")[2])
+        except Teams.DoesNotExist:
+            return render(request, get_404())
+        except:
+            return render(request, get_404())        
         tasks = Task.objects.filter(belongs_to=team)
         assigned_tasks = MembershipToTask.objects.filter(member=us, team=team)
         if us not in team.members.all():
@@ -261,8 +285,13 @@ class MembersView(LoginRequiredMixin, TemplateView):
     login_url='/../login'
     def get(self, request):
         user = request.user
-        us = UserProfile.objects.get(user=user)
-        team = Teams.objects.get(url=request.path.split("/")[2])
+        us = UserProfile.objects.get(user=user) 
+        try:
+            team = Teams.objects.get(url=request.path.split("/")[2])
+        except Teams.DoesNotExist:
+            return render(request, get_404())
+        except:
+            return render(request, get_404())
         if us not in team.members.all():
             return redirect("/")
         return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'notifications': get_notifications(us, 1)})
@@ -275,7 +304,12 @@ class TeamSettingsView(LoginRequiredMixin, TemplateView):
     def get(self, request):
         user = request.user
         us = UserProfile.objects.get(user=user)
-        team = Teams.objects.get(url=request.path.split("/")[2])
+        try:
+            team = Teams.objects.get(url=request.path.split("/")[2])
+        except Teams.DoesNotExist:
+            return render(request, get_404())
+        except:
+            return render(request, get_404())
         if us not in team.members.all():
             return redirect("/")
         return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'notifications': get_notifications(us, 1)})
@@ -307,7 +341,12 @@ class DeleteTeam(LoginRequiredMixin, TemplateView):
     def get(self, request):
         user = request.user
         us = UserProfile.objects.get(user=user)
-        team = Teams.objects.get(url=request.path.split("/")[2])
+        try:
+            team = Teams.objects.get(url=request.path.split("/")[2])
+        except Teams.DoesNotExist:
+            return render(request, get_404())
+        except:
+            return render(request, get_404())
         form = LoginForm()
         if us not in team.members.all():
             return redirect("/")
@@ -344,8 +383,18 @@ class DeleteTasks(LoginRequiredMixin, TemplateView):
     def get(self, request):
         user = request.user
         us = UserProfile.objects.get(user=user)
-        team = Teams.objects.get(url=request.path.split("/")[2])
-        tasks = Task.objects.get(url=request.path.split("/")[4])
+        try:
+            team = Teams.objects.get(url=request.path.split("/")[2])
+        except Teams.DoesNotExist:
+            return render(request, get_404())
+        except:
+            return render(request, get_404())
+        try:
+            tasks = Task.objects.get(url=request.path.split("/")[4])
+        except Task.DoesNotExist:
+            return render(request, get_404())
+        except:
+            return render(request, get_404())  
         form = LoginForm()
         if us not in team.members.all():
             return redirect("/")
@@ -364,7 +413,7 @@ class DeleteTasks(LoginRequiredMixin, TemplateView):
                 try:
                     us = UserProfile.objects.get(user=user)
                     if user is not None:
-                        if us == tasks.created_by:
+                        if us == tasks.created_by or us == team.admin:
                             tasks.delete()
                         return redirect("../../")
                     else:
@@ -379,8 +428,18 @@ class SpecificTaskView(LoginRequiredMixin, TemplateView):
     def get(self, request):
         user = request.user
         us = UserProfile.objects.get(user=user)
-        team = Teams.objects.get(url=request.path.split("/")[2])
-        tasks = Task.objects.get(url=request.path.split("/")[4])
+        try:
+            team = Teams.objects.get(url=request.path.split("/")[2])
+        except Teams.DoesNotExist:
+            return render(request, get_404())
+        except:
+            return render(request, get_404())
+        try:
+            tasks = Task.objects.get(url=request.path.split("/")[4])
+        except Task.DoesNotExist:
+            return render(request, get_404())
+        except:
+            return render(request, get_404())  
         comments = Comments.objects.filter(task=tasks)
         notification = MessageNotification.objects.filter(user=us, task=tasks)
         for i in notification.all():
@@ -417,8 +476,16 @@ class DeleteTeamMember(LoginRequiredMixin, TemplateView):
     def get(self, request):
         user = request.user
         us = UserProfile.objects.get(user=user)
-        team = Teams.objects.get(url=request.path.split("/")[2])
-        del_user = UserProfile.objects.get(username=request.path.split("/")[4])
+        try:
+            team = Teams.objects.get(url=request.path.split("/")[2])
+        except Teams.DoesNotExist:
+            return render(request, get_404())
+        except:
+            return render(request, get_404())
+        try:
+            del_user = UserProfile.objects.get(username=request.path.split("/")[4])
+        except UserProfile.DoesNotExist:
+            return render(request, get_404())
         if team.admin == us:
             Membership.objects.filter(member=del_user).delete()
             return redirect("../../../settings/")
@@ -434,9 +501,20 @@ class TaskSettings(LoginRequiredMixin, TemplateView):
     def get(self, request):
         user=request.user
         us = UserProfile.objects.get(user=user)
-        team = Teams.objects.get(url=request.path.split("/")[2])
-        tasks = Task.objects.get(url=request.path.split("/")[4])
-        if(tasks.created_by == us):     
+        try:
+            team = Teams.objects.get(url=request.path.split("/")[2])
+        except Teams.DoesNotExist:
+            return render(request, get_404())
+        except:
+            return render(request, get_404())    
+        try:
+            tasks = Task.objects.get(url=request.path.split("/")[4])
+        except Task.DoesNotExist:
+            return render(request, get_404())
+        except:
+            return render(request, get_404())        
+        
+        if(tasks.created_by == us or team.admin == us):     
             return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'task': tasks, 'notifications': get_notifications(us, 1)})
         else:
             return redirect("/")
@@ -445,7 +523,7 @@ class TaskSettings(LoginRequiredMixin, TemplateView):
         us = UserProfile.objects.get(user=user)
         team = Teams.objects.get(url=request.path.split("/")[2])
         tasks = Task.objects.get(url=request.path.split("/")[4])
-        if(tasks.created_by == us):
+        if(tasks.created_by == us or team.admin == us):
             data = {}
             usery = []
             for key, value in request.POST.items():
