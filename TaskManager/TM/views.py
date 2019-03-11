@@ -297,7 +297,7 @@ class TeamSettingsView(LoginRequiredMixin, TemplateView):
                 except User.DoesNotExist:
                     return render(request, self.template_name, {'form': form, 'us': us, 'user': user, 'error': True, 'error_msg': "User Does not exist: " + str(value), 'notifications': get_notifications(us, 1)})  
         team.name = x["name"]
-        team.url = x["url"]
+        #team.url = x["url"]
         team.save()  
         return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'notifications': get_notifications(us, 1)})
 
