@@ -152,7 +152,6 @@ class SpecificTeamView(LoginRequiredMixin, TemplateView):
 
 class ProfileView(TemplateView):
     template_name="profile.html"
-    template_404="404.html"
     def get(self, request):
         url = request.path
         url = url.split("/")
@@ -169,7 +168,7 @@ class ProfileView(TemplateView):
                 log = False
             return render(request, self.template_name, {'user': user, 'us': us, 'logged_in': log, 'notifications': get_notifications(us, 1)})
         else:
-            return render(request, self.templ_404)
+            return render(request, get_404())
         return
     def post(self, request):
         return
