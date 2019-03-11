@@ -140,7 +140,7 @@
                 <!-- Card Body -->
                   <div class="card-body">
                         {%  for i in task.assigned_members.all %}
-                      <input type="checkbox" checked="checked"> <label for="{{ us.first_name  }}{{  us.last_name }}">{{ i.user.first_name }} {{ i.user.last_name }}</label> 
+                      <input type="checkbox" name="user{{ i.user.id }}" value="{{  i.user.id  }}" checked="checked"> <label for="{{ us.first_name  }}{{  us.last_name }}">{{ i.user.first_name }} {{ i.user.last_name }}</label> 
                       <br>
                       {%  endfor %}
                       {%  for i in team.members.all %}

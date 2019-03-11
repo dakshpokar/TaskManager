@@ -438,12 +438,21 @@ class TaskSettings(LoginRequiredMixin, TemplateView):
         tasks = Task.objects.get(url=request.path.split("/")[4])
         if(tasks.created_by == us):
             data = {}
+            usery = []
             for key, value in request.POST.items():
-                data[key] = value
+                if "user" in key:
+                    usery.append(value)
+                else:
+                    data[key] = value
             print(data)
             tasks.title = data["title"]
             tasks.desc = data["desc"]
             tasks.status = STATUS[data["status"]]
             tasks.save()
+            MembershipToTask.objects.filter(task=tasks).delete()
+            for i in usery:
+                mem = UserProfile.objects.get(user=User.objects.get(id = i))
+                m = MembershipToTask(member=mem, task=tasks, team=team)
+                m.save()
             return redirect("/team/"+team.url+"/tasks/"+tasks.url+"/")
         

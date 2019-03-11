@@ -217,7 +217,7 @@
                               </tr>
                           </thead>
                             <tbody>
-                                  {%  for i in team.members.all %}
+                                  {%  for i in tasks.assigned_members.all %}
                                       <tr>
                                           <td style="width: 7%; text-align: center;"><img class="img-profile rounded-circle" style="height: 30px" src="{{ MEDIA_ROOT }}{{ i.profile_picture.url }}"></td>
                                           <td style="width: 78%"><h4>{{  i.user.first_name    }} {{   i.user.last_name }} </h4></td>
@@ -229,13 +229,13 @@
                 </div>
                 <div class="row">
                     <div class="col-12 text-right">
-                            <a href="/team/{{ team.url }}/tasks/{{ task.url }}/delete/" name="update-profile" class="btn btn-danger btn-icon-split">
+                            <a href="/team/{{ team.url }}/tasks/{{ tasks.url }}/delete/" name="update-profile" class="btn btn-danger btn-icon-split">
                                 <span class="icon text-white-50">
                                   <i class="fas fa-trash"></i>
                                 </span>
                                 <span class="text">Delete Task</span>
                               </a>
-                              <a href="/team/{{ team.url }}/tasks/{{ task.url }}/settings/" name="update-profile" class="btn btn-primary btn-icon-split">
+                              <a href="/team/{{ team.url }}/tasks/{{ tasks.url }}/settings/" name="update-profile" class="btn btn-primary btn-icon-split">
                                 <span class="icon text-white-50">
                                   <i class="fas fa-trash"></i>
                                 </span>
