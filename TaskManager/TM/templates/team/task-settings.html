@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  
+  <title>Task Settings - {{ team.name }} - Task Manager</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+
+</head>
+<style type="text/css">
+    .form-control-user {
+        font-size: .8rem;
+        border-radius: 10rem;
+        padding: 1rem;
+        width: 100%;
+        height: 100%;
+        text-decoration: none;
+        outline: none;
+        border: 1px solid #d1d3e2;
+    }
+    </style>
+<script type="text/javascript">
+    var deg = 0
+    function del(i){
+        var x = document.getElementById("mem-"+i.toString())
+        x.remove()
+    }
+    function displayer(){
+      var dis = document.getElementById("dis")
+      var input = document.getElementById("desc")
+      var html_input = input.value
+      dis.innerHTML = html_input
+    }
+    </script>
+<body id="page-top" onload="displayer()">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <!-- SideBar Code -->
+    {% block sidebar %}
+      {% include "team/menu.html" %}
+    {% endblock %}
+    <!-- SideBar End -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <!-- Topbar -->
+        {% block topbar %}
+        {% include "team/topbar.html" %}
+      {% endblock %}
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">{{    task.title }} - Settings</h1>
+          </div>
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+          <!-- Content Row -->
+          <div class="row">
+            <div class="col-xl-2"></div>
+            <!-- Area Chart -->
+            <div class="col-xl-8">
+                {% if error %}
+                <div class="alert alert-danger" role="alert">
+                  {%  if error_msg != ""  %}
+                  {{  error_msg }}
+                  {%  else  %}
+                    Entered information is invalid!
+                  {%  endif %}
+                  </div>
+                  
+                  {% endif %}
+                  
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Edit name of Task </h6>
+                  
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <input type="text" name="title" value="{{  task.title }}" class="form-control form-control-user" placeholder="Enter the Name of Task" required>
+                </div>
+              </div>
+              <div class="card shadow mb-4">
+                  <!-- Card Header - Dropdown -->
+                  <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Edit description for the task </h6>
+                    
+                  </div>
+                  <!-- Card Body -->
+                  <div class="card-body">
+                      <div class="row">
+                        <div class="col-6">
+                            <h5>Description: </h5>
+                            <textarea name="desc" cols="40" rows="10" id="desc" placeholder="Task Description (Can be in HTML)" onkeyup="displayer()" required="" data-gramm="true" data-txt_gramm_id="9ae3bae2-a9ec-149d-ffa9-139280d44e8a" data-gramm_id="9ae3bae2-a9ec-149d-ffa9-139280d44e8a" spellcheck="false" data-gramm_editor="true" style="z-index: auto; position: relative; line-height: 24px; font-size: 16px; transition: none 0s ease 0s; background: transparent !important;">{{ task.desc   }}</textarea>
+                      </div>
+                      <div class="col-6">
+                        <h5>Preview: </h5>
+                      <div id="dis" style="border: 1px solid #d1d3e2; width: 100%">
+
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Assign Members to Task </h6>
+                </div>
+                <!-- Card Body -->
+                  <div class="card-body">
+                        {%  for i in task.assigned_members.all %}
+                      <input type="checkbox" checked="checked"> <label for="{{ us.first_name  }}{{  us.last_name }}">{{ i.user.first_name }} {{ i.user.last_name }}</label> 
+                      <br>
+                      {%  endfor %}
+                      {%  for i in team.members.all %}
+                    {%  if i not in task.assigned_members.all %}
+                    <input type="checkbox" name="user{{ i.user.id }}" value="{{  i.user.id  }}"> <label for="{{ i.first_name  }}{{  i.last_name }}">{{ i.user.first_name }} {{ i.user.last_name }}</label> 
+                    <br>
+                    {%  endif %}
+                    {%  endfor %}
+                        </div>
+                        
+              </div>
+              </div>
+              <div class="col-6">
+                  <div class="card shadow mb-4">
+                      <!-- Card Header - Dropdown -->
+                      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Status </h6>
+                      </div>
+                      <!-- Card Body -->
+                        <div class="card-body">
+                            <input type="radio" name="status" value="planned" {%    if task.status == 0 %}checked{%  endif %}> Planned<br>
+                            <input type="radio" name="status" value="inprogress"{%    if task.status == 1 %}checked{%  endif %}> In Progress<br>
+                            <input type="radio" name="status" value="done"{%    if task.status == 2 %}checked{%  endif %}> Done  
+                                                         
+                    </div>
+              </div>  
+            </div>
+            </div>
+              <div class="row">
+                    <div class="col-12 text-right">
+                            <a href="/team/{{ team.url }}/tasks/{{ task.url }}/delete/" name="update-profile" class="btn btn-danger btn-icon-split">
+                                <span class="icon text-white-50">
+                                  <i class="fas fa-trash"></i>
+                                </span>
+                                <span class="text">Delete Task</span>
+                              </a>
+                    <button name="task-update" class="btn btn-primary btn-icon-split">
+                              <span class="icon text-white-50">
+                                <i class="fas fa-arrow-right"></i>
+                              </span>
+                              <span class="text">Update Task</span>
+                    </button></div>
+                          
+                                    
+
+            <div class="col-xl-2"></div>
+          </div>
+          <br>
+            </form>
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      {% block footer %}
+      {% include "footer.html" %}
+    {% endblock %}
+
+      <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Logout Modal-->
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="/logout/">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+
+  <!-- Page level plugins -->
+  <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
+  <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+
+</body>
+
+</html>

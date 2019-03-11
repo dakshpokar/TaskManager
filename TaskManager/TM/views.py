@@ -428,8 +428,22 @@ class TaskSettings(LoginRequiredMixin, TemplateView):
         team = Teams.objects.get(url=request.path.split("/")[2])
         tasks = Task.objects.get(url=request.path.split("/")[4])
         if(tasks.created_by == us):     
-            return render(request, self.template_name)
+            return render(request, self.template_name, {'user': user, 'us': us, 'team': team, 'task': tasks, 'notifications': get_notifications(us, 1)})
         else:
             return redirect("/")
     def post(self, request):
-        return
+        user=request.user
+        us = UserProfile.objects.get(user=user)
+        team = Teams.objects.get(url=request.path.split("/")[2])
+        tasks = Task.objects.get(url=request.path.split("/")[4])
+        if(tasks.created_by == us):
+            data = {}
+            for key, value in request.POST.items():
+                data[key] = value
+            print(data)
+            tasks.title = data["title"]
+            tasks.desc = data["desc"]
+            tasks.status = STATUS[data["status"]]
+            tasks.save()
+            return redirect("/team/"+team.url+"/tasks/"+tasks.url+"/")
+        

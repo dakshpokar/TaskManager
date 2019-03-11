@@ -71,15 +71,36 @@
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">{{  tasks.title   }}</h1>
-            <h6><strong>Date Created: </strong>{{  tasks.date_created   }}</h6>
+            <div>
+              <h1 class="d-inline-block h3 mb-0 text-gray-800">{{  tasks.title   }}</h1>
+              <!--
+              {%  if tasks.status == 0 %}
+            <div class="d-inline-block card bg-warning text-white shadow text-center" style="height: 30px">
+                <div style="padding: 7px">
+                  Planned
+                </div>
+              </div>
+            {%  elif tasks.status == 1 %}
+            <div class="card bg-danger text-white shadow">
+                <div class="card-body">
+                  In Progress
+                </div>
+              </div>
+            {%  elif tasks.status == 2 %}
+            <div class="card bg-success text-white shadow">
+                <div class="card-body">
+                  Done
+                </div>
+              </div>
+            {%  endif %}--></div>
+            <h6><strong>Date Created: </strong>{{  tasks.date_created   }}</h6>        
+
           </div>
-   
           <!-- Content Row -->
           <div class="row">
-            <div class="col-xl-2"></div>
+          
             <!-- Area Chart -->
-            <div class="col-xl-8">
+            <div class="col-xl-9">
                 {% if error %}
                 <div class="alert alert-danger" role="alert">
                   {%  if error_msg != ""  %}
@@ -156,6 +177,70 @@
                                         </button></div>
                                           </div>
             </form>
+        </div>
+        <div class="col-xl-3">
+            {%  if tasks.status == 0 %}
+            <div class="card bg-warning text-white shadow mb-4">
+                <div class="card-body">
+                  Status
+                  <div class="text-white-50 small">Planned</div>
+                </div>
+              </div>
+        {%  elif tasks.status == 1 %}
+        <div class="card bg-danger text-white shadow mb-4">
+            <div class="card-body">
+              Status
+              <div class="text-white-50 small">In Progress</div>
+            </div>
+          </div>
+        {%  elif tasks.status == 2 %}
+        <div class="card bg-success text-white shadow mb-4">
+            <div class="card-body">
+              Status
+              <div class="text-white-50 small">Done</div>
+            </div>
+          </div>
+        {%  endif %}
+        
+              <div class="card shadow mb-4">
+                  <!-- Card Header - Dropdown -->
+                  <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Assigned Members</h6>
+                  </div>
+                  <!-- Card Body -->
+                  <div class="card-body">
+                      <table class="table"  width="100%" cellspacing="0">
+                          <thead style="display: none">
+                              <tr>
+                                  <th></th>
+                                  <th></th>
+                              </tr>
+                          </thead>
+                            <tbody>
+                                  {%  for i in team.members.all %}
+                                      <tr>
+                                          <td style="width: 7%; text-align: center;"><img class="img-profile rounded-circle" style="height: 30px" src="{{ MEDIA_ROOT }}{{ i.profile_picture.url }}"></td>
+                                          <td style="width: 78%"><h4>{{  i.user.first_name    }} {{   i.user.last_name }} </h4></td>
+                                      </tr>
+                                  {%  endfor %}
+                            </tbody>
+                            </table>
+                  </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 text-right">
+                            <a href="/team/{{ team.url }}/tasks/{{ task.url }}/delete/" name="update-profile" class="btn btn-danger btn-icon-split">
+                                <span class="icon text-white-50">
+                                  <i class="fas fa-trash"></i>
+                                </span>
+                                <span class="text">Delete Task</span>
+                              </a>
+                              <a href="/team/{{ team.url }}/tasks/{{ task.url }}/settings/" name="update-profile" class="btn btn-primary btn-icon-split">
+                                <span class="icon text-white-50">
+                                  <i class="fas fa-trash"></i>
+                                </span>
+                                <span class="text">Edit Task</span>
+                              </a></div>
         </div>
       </div>
 
