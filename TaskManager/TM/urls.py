@@ -10,6 +10,7 @@ urlpatterns = [
     path('logout/', logout_view, name="logout"),
     path('teams/', TeamView.as_view(), name="team"),
     path('settings/', SettingsView.as_view(), name="settings"),
+    path('about/', AboutView.as_view(), name="about"),
 
     url(r'^profile\/.*$', ProfileView.as_view(), name="profile"),
     url(r'^team\/[a-zA-Z0-9]+\/dashboard\/$', SpecificTeamView.as_view(), name="team"),    
