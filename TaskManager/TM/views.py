@@ -548,7 +548,7 @@ class TaskSettings(LoginRequiredMixin, TemplateView):
             return redirect("/team/"+team.url+"/tasks/"+tasks.url+"/")
         
 class AboutView(TemplateView):
-    template_name = "TM/about.html"
+    template_name = "about.html"
     def get(self, request):
-        
+
         return render(request, self.template_name)
