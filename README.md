@@ -1,6 +1,6 @@
 # FOSSEE Screening Task 1
 Task Manager is an web-based django application that allows project managers to effectively manage and handle their teams by monitoring and analyzing status of each task allotted to members of the team created. 
-[Detailed Documentation](https://github.com/dakshpokar/fsf_2019_screening_task1/blob/master/Documentation.pdf).
+[Detailed Documentation](https://github.com/dakshpokar/fsf_2019_screening_task1/blob/master/TaskManager/static/Documentation.pdf).
 
 # Requirements
 1. Django 2.1
@@ -19,4 +19,4 @@ packages.
 4. Server will be initialized at http://127.0.0.1:8000
 
 # Documentation
-Detailed documentation with test cases is available in Documentation.pdf file location in the main directory or else [click here](https://github.com/dakshpokar/fsf_2019_screening_task1/blob/master/Documentation.pdf).
+Detailed documentation with test cases is available in Documentation.pdf file location in the main directory or else [click here](https://github.com/dakshpokar/fsf_2019_screening_task1/blob/master/TaskManager/static/Documentation.pdf).
