@@ -3,7 +3,7 @@ Task Manager is an web-based django application that allows project managers to 
 [Detailed Documentation](https://github.com/dakshpokar/fsf_2019_screening_task1/blob/master/TaskManager/static/Documentation.pdf).
 
 # Live Demo
-[Click here](https://awesometaskmanager.herokuapp.com/)
+[Click here](https://www.youtube.com/watch?v=vvJMzRrGmcs)
 
 # Requirements
 1. Django 2.1
